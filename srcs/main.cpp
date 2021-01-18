@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 12:24:39 by schene            #+#    #+#             */
-/*   Updated: 2021/01/15 13:27:17 by schene           ###   ########.fr       */
+/*   Updated: 2021/01/18 15:21:28 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,16 +99,6 @@ int main()
 	
 	std::cout << std::endl << "------------------------------------------" << std::endl;
 	
-	// std::cout << "call to assign with iterator" << std::endl;
-	// ft::Vector<int> 	v2;
-	// v2.assign(v1.begin(), v1.end());
-	// std::cout << "size = " << v2.size() << std::endl;
-	// std::cout << "capacity = " << v2.capacity() << std::endl;
-	// for (size_t i = 0; i < v2.size(); i++)
-	// 	std::cout << i << " -> " << v2[i] << std::endl;
-	
-	// std::cout << std::endl << "------------------------------------------" << std::endl;
-	
 	std::cout << "call to insert (one 42 at second)" << std::endl;
 
 	v1.insert(++v1.begin(), 42);
@@ -196,14 +186,14 @@ int main()
   	for (unsigned i=0; i<foo.size(); i++)
    		std::cout << ' ' << foo[i];
 	std::cout << '\n';
-  	std::cout << "size = "<< foo.size() << " capacity = " << foo.capacity() <<'\n';
+  	std::cout << " size = "<< foo.size() << " capacity = " << foo.capacity() <<'\n';
 	
 
 	std::cout << "bar contains:";
   	for (unsigned i=0; i<bar.size(); i++)
     	std::cout << ' ' << bar[i];
   	std::cout << '\n';
-  	std::cout << "size = "<< bar.size() << " capacity = " << bar.capacity() <<'\n';
+  	std::cout << " size = "<< bar.size() << " capacity = " << bar.capacity() <<'\n';
 
   	foo.swap(bar);
 	std::cout << '\n'<< "------------- SWAP -----------" << std::endl;
@@ -212,30 +202,28 @@ int main()
   	for (unsigned i=0; i<foo.size(); i++)
    		std::cout << ' ' << foo[i];
   	std::cout << '\n';
-  	std::cout << " size = "<< foo.size() << " capacity = " << foo.capacity() <<'\n';
+  	std::cout << "size = "<< foo.size() << " capacity = " << foo.capacity() <<'\n';
 
 	  std::cout << "bar contains:";
   	for (unsigned i=0; i<bar.size(); i++)
     	std::cout << ' ' << bar[i];
   	std::cout << '\n';
-  	std::cout << " size = "<< bar.size() << " capacity = " << bar.capacity() <<'\n';
+  	std::cout << "size = "<< bar.size() << " capacity = " << bar.capacity() <<'\n';
   	
-	// bar.swap(foo);
-	// std::cout << '\n' << "------------- SWAP -----------" << std::endl;
+	bar.swap(foo);
+	std::cout << '\n' << "------------- SWAP -----------" << std::endl;
 
-  	// std::cout << "foo contains:";
-  	// for (unsigned i=0; i<foo.size(); i++)
-   	// 	std::cout << ' ' << foo[i];
-  	// std::cout << '\n';
-  	// std::cout << " size = "<< foo.size() << " capacity = " << foo.capacity() <<'\n';
+  	std::cout << "foo contains:";
+  	for (unsigned i=0; i<foo.size(); i++)
+   		std::cout << ' ' << foo[i];
+  	std::cout << '\n';
+  	std::cout << "size = "<< foo.size() << " capacity = " << foo.capacity() <<'\n';
 
-	//   std::cout << "bar contains:";
-  	// for (unsigned i=0; i<bar.size(); i++)
-    // 	std::cout << ' ' << bar[i];
-  	// std::cout << '\n';
-  	// std::cout << " size = "<< bar.size() << " capacity = " << bar.capacity() <<'\n';
+	  std::cout << "bar contains:";
+  	for (unsigned i=0; i<bar.size(); i++)
+    	std::cout << ' ' << bar[i];
+  	std::cout << '\n';
+  	std::cout << "size = "<< bar.size() << " capacity = " << bar.capacity() <<'\n';
 
-	// while (1)
-	// 	;
 	return 0;
 }
