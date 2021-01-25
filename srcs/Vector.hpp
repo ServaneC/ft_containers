@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 10:09:47 by schene            #+#    #+#             */
-/*   Updated: 2021/01/19 15:07:26 by schene           ###   ########.fr       */
+/*   Updated: 2021/01/19 15:52:34 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -520,6 +520,12 @@ namespace ft
 				this->resize(0);
 			}
 	};
+
+	// template <class Alloc>
+	// class vector<bool,Alloc>
+	// {
+		
+	// };
 
 	template <class T, class Alloc>
   	bool		operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)

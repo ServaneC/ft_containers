@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 10:13:03 by schene            #+#    #+#             */
-/*   Updated: 2021/01/19 15:13:29 by schene           ###   ########.fr       */
+/*   Updated: 2021/01/19 15:54:43 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -448,4 +448,196 @@ void		test_vector(void)
 	std::cout << std::endl;
 	std::cout << std::setw(30) << "myv_s >= myv_s2: " << (myv_s >= myv_s2) << std::endl;
 	std::cout << std::setw(30) << "vector_s >= vector_s2: " << (vector_s >= vector_s2) << std::endl;
+	
+	
+	// std::cout << std::endl << _YELLOW <<  "/* ********************************************************************** */" << std::endl;
+	// std::cout << "/*                          VECTOR TESTS w/bool                           */" << std::endl;
+	// std::cout << "/* ********************************************************************** */" << _END << std::endl;
+	// std::cout << std::endl;
+
+	// ft::vector<bool>	myv_b;
+	// std::vector<bool> vector_b;
+
+	// std::cout << "ft::vector<" << _PURPLE << "bool" << _END << "> myv_b;" << std::endl;
+	// std::cout << "std::vector<" << _PURPLE << "bool" << _END << "> vector_b;" << std::endl << std::endl;
+
+	// std::cout << _BLUE << "# max_size tests" << _END << std::endl;
+	// std::cout << "myv_b.max_size():\t\t" << myv_b.max_size() << std::endl;
+	// std::cout << "vector_b.max_size():\t" << vector_b.max_size() << std::endl;
+	// std::cout << std::endl;
+
+	// std::cout << _BLUE << "# empty and size tests" << _END << std::endl;
+	// compareVector("vector_b.empty()", myv_b, vector_b);
+	// compareVector("vector_b.size()", myv_b, vector_b);
+	
+	// std::cout << _BLUE<< "# testing out_of_range exception" << _END << std::endl;
+	// std::cout << "myv_b.at(0):" << std::endl;
+	// try
+	// {
+	// 	myv_b.at(0);
+	// }
+	// catch (std::exception &e)
+	// {
+	// 	std::cerr << "Catching exception myv_b: " << e.what() << std::endl;
+	// }
+	// std::cout << "vector_b.at(0):" << std::endl;
+	// try
+	// {
+	// 	vector_b.at(0);
+	// }
+	// catch (std::exception &e)
+	// {
+	// 	std::cerr << "Catching exception vector_b: " << e.what() << std::endl;
+	// }
+	// std::cout << std::endl;
+
+	// std::cout << _BLUE << "# testing capacity() and reserve() function" << _END << std::endl;
+	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
+	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl<< std::endl;
+	// myv_b.reserve(0);
+	// vector_b.reserve(0);
+	// std::cout << "myv_b.reserve(0);" << std::endl;
+	// std::cout << "vector_b.reserve(0);" << std::endl<< std::endl;
+	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
+	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl<< std::endl;
+	// myv_b.reserve(1);
+	// vector_b.reserve(1);
+	// std::cout << "myv_b.reserve(1);" << std::endl;
+	// std::cout << "vector_b.reserve(1);" << std::endl<< std::endl;
+	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
+	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl<< std::endl;
+	// std::cout << std::endl;
+
+	// std::cout << _BLUE << "# testing reserve exception" << _END << std::endl;
+	// std::cout << "myv_b.reserve(" << std::numeric_limits<size_t>::max() << ");" << std::endl;
+	// try
+	// {
+	// 	myv_b.reserve(std::numeric_limits<size_t>::max());
+	// }
+	// catch (std::exception &e)
+	// {
+	// 	std::cerr << "Catching exception myv_b: " << e.what() << std::endl;
+	// }
+	// std::cout << "vector_b.reserve(" << std::numeric_limits<size_t>::max() << ");" << std::endl;
+	// try
+	// {
+	// 	vector_b.reserve(std::numeric_limits<size_t>::max());
+	// }
+	// catch (std::exception &e)
+	// {
+	// 	std::cerr << "Catching exception vector_b: " << e.what() << std::endl;
+	// }
+	// std::cout << std::endl;
+
+	// std::cout << _BLUE << "# resize tests" << _END << std::endl;
+	// myv_b.resize(8, "hi");
+	// vector_b.resize(8, "hi");
+	// compareVector("vector_b.resize(8, \"hi\")", myv_b, vector_b);
+	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
+	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl<< std::endl;
+
+	// std::cout << _BLUE << "# push_back tests" << _END << std::endl;
+	// myv_b.push_back("hello");
+	// vector_b.push_back("hello");
+	// compareVector("vector.push_back(\"hello\")", myv_b, vector_b);
+	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
+	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl << std::endl;
+	
+	// std::cout << _BLUE << "# erase tests" << _END << std::endl;
+	// myv_b.erase(myv_b.begin());
+	// vector_b.erase(vector_b.begin());
+	// compareVector("vector_b.erase(vector_b.begin())", myv_b, vector_b);
+
+	// std::cout << _BLUE << "# testing front and back function" << _END << std::endl;
+	// std::cout << "myv_b.front() => " << myv_b.front() << std::endl;
+	// std::cout << "vector_b.front() => " << vector_b.front() << std::endl << std::endl;
+	
+	// std::cout << "myv_b.back() => " << myv_b.back() << std::endl;
+	// std::cout << "vector_b.back() => " << vector_b.back() << std::endl << std::endl;
+
+	// std::cout << _BLUE << "# pop_back tests" << _END << std::endl;
+	// myv_b.pop_back();
+	// vector_b.pop_back();
+	// compareVector("vector_b.pop_back()", myv_b, vector_b);
+	// std::cout << "myv_b.size(): " << myv_b.size() << std::endl;
+	// std::cout << "vector_b.size(): " << vector_b.size() << std::endl << std::endl;
+	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
+	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl << std::endl;
+
+	// std::cout << _BLUE << "# launching clear twice" << _END << std::endl;
+	// myv_b.clear();
+	// vector_b.clear();
+	// compareVector("vector_b.clear()", myv_b, vector_b);
+	// myv_b.clear();
+	// vector_b.clear();
+	// compareVector("vector_b.clear()", myv_b, vector_b);
+	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
+	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl;
+
+	// std::cout << _BLUE << "# assign tests" << _END << std::endl;
+	// myv_b.assign((size_t)10, "code");
+	// vector_b.assign((size_t)10, "code");
+	// compareVector("vector_b.assign(10, \"code\")", myv_b, vector_b);
+
+	// myv_b.assign(myv_b.begin(), myv_b.begin() + 4); // wtf that works
+	// vector_b.assign(vector_b.begin(), vector_b.begin() + 4);
+	// compareVector("vector_b.assign(vector_b.begin(), vector_b.begin() + 4)", myv_b, vector_b);
+
+	// std::cout << _BLUE << "# insert tests" << _END << std::endl;
+	// myv_b.insert(myv_b.begin() + 2, "42born2code");
+	// vector_b.insert(vector_b.begin() + 2, "42born2code");
+	// compareVector("vector_b.insert(vector_b.begin() + 2, \"42born2code\");", myv_b, vector_b);
+
+	// ft::vector<std::string> myv_b2;
+	// std::vector<std::string> vector_b2;
+	// std::cout << "ft::vector<" << _PURPLE << "std::string" << _END << "> myv_b2;" << std::endl;
+	// std::cout << "std::vector<" << _PURPLE << "std::string" << _END << "> vector_b2;" << std::endl << std::endl;
+	
+	// std::cout << _BLUE << "# swap tests" << _END << std::endl;
+	// myv_b.swap(myv_b2);
+	// vector_b.swap(vector_b2);
+	// compareVector("vector_b.swap(vector_b2)", myv_b, vector_b);
+	// compareVector("vector_b2", myv_b2, vector_b2);
+
+	// myv_b.swap(myv_b2);
+	// vector_b.swap(vector_b2);
+	// compareVector("vector_b.swap(vector_b2)", myv_b, vector_b);
+	// compareVector("vector_b2", myv_b2, vector_b2);
+
+	// std::cout << _BLUE << "# erase tests" << _END << std::endl;
+	// myv_b.erase(myv_b.begin() + 2);
+	// vector_b.erase(vector_b.begin() + 2);
+	// compareVector("vector_b.erase(this->begin() + 2", myv_b, vector_b);
+
+	// std::cout << _BLUE << "# operator= tests" << _END << std::endl;
+	// myv_b2 = myv_b;
+	// vector_b2 = vector_b;
+	// compareVector("vector_b2 = vector_b", myv_b2, vector_b2);
+
+	// myv_b.at(2) = "world";
+	// vector_b.at(2) = "world";
+	// compareVector("vector_b.at(2) = \"world\"", myv_b, vector_b);
+
+	// myv_b[1] = "hello";
+	// vector_b[1] = "hello";
+	// compareVector("vector_b[1] = \"hello\"", myv_b, vector_b);
+
+	// std::cout << std::endl << _BLUE << "# comparaisons tests" << _END << std::endl;
+	// std::cout << std::setw(30) << "myv_b < myv_b2: " << (myv_b < myv_b2) << std::endl;
+	// std::cout << std::setw(30) << "vector_b < vector_b2: " << (vector_b < vector_b2) << std::endl;
+	// std::cout << std::endl;
+	// std::cout << std::setw(30) << "myv_b > myv_b2: " << (myv_b > myv_b2) << std::endl;
+	// std::cout << std::setw(30) << "vector_b > vector_b2: " << (vector_b > vector_b2) << std::endl;
+	// std::cout << std::endl;
+	// std::cout << std::setw(30) << "myv_b == myv_b2: " << (myv_b == myv_b2) << std::endl;
+	// std::cout << std::setw(30) << "vector_b == vector_b2: " << (vector_b == vector_b2) << std::endl;
+	// std::cout << std::endl;
+	// std::cout << std::setw(30) << "myv_b != myv_b2: " << (myv_b == myv_b2) << std::endl;
+	// std::cout << std::setw(30) << "vector_b != vector_b2: " << (vector_b == vector_b2) << std::endl;
+	// std::cout << std::endl;
+	// std::cout << std::setw(30) << "myv_b <= myv_b2: " << (myv_b <= myv_b2) << std::endl;
+	// std::cout << std::setw(30) << "vector_b <= vector_b2: " << (vector_b <= vector_b2) << std::endl;
+	// std::cout << std::endl;
+	// std::cout << std::setw(30) << "myv_b >= myv_b2: " << (myv_b >= myv_b2) << std::endl;
+	// std::cout << std::setw(30) << "vector_b >= vector_b2: " << (vector_b >= vector_b2) << std::endl;
 }
