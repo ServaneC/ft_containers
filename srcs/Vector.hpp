@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 10:09:47 by schene            #+#    #+#             */
-/*   Updated: 2021/01/19 15:52:34 by schene           ###   ########.fr       */
+/*   Updated: 2021/01/26 14:53:18 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ namespace ft
 		public:
 			typedef T					value_type;
 			typedef value_type*			pointer;
-			typedef const value_type*	const_pointer;
+			typedef const pointer		const_pointer;
 			typedef value_type&			reference;
 			typedef const value_type&	const_reference;
 			typedef std::ptrdiff_t		difference_type;
@@ -43,7 +43,7 @@ namespace ft
 		public:
 		 	vectorIterator(void) : it(NULL) {}
 			vectorIterator(pointer &tab) : it(tab) {}
-			vectorIterator(const pointer &tab) : it(tab) {}
+			vectorIterator(const_pointer &tab) : it(tab) {}
 			vectorIterator(vectorIterator const &to_copy) : it(to_copy.it) {}
 			virtual ~vectorIterator() {}
 
@@ -306,7 +306,7 @@ namespace ft
 				
 				if (n < this->_size)
 				{
-					for (size_t i = n; i < this->_size; i++)
+					for (size_type i = n; i < this->_size; i++)
 						_alloc.destroy(this->_tab + i);
 				}
 				else if (n > this->_size)

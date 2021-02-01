@@ -6,11 +6,11 @@
 #    By: schene <schene@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/07 12:35:42 by schene            #+#    #+#              #
-#    Updated: 2021/01/25 13:56:34 by schene           ###   ########.fr        #
+#    Updated: 2021/01/26 13:03:37 by schene           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS		= test/test_vector.cpp test/main.cpp
+SRCS		= srcs/main.cpp
 
 OBJS		= ${SRCS:.cpp=.o}
 
