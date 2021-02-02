@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 15:39:20 by schene            #+#    #+#             */
-/*   Updated: 2021/01/26 13:14:31 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/02 11:30:07 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@
 template <class T>
 class node
 {
-	public:
-		T			data;
-		node<T>		*prev;
-		node<T>		*next;
+	private:
+		T			_data;
+		node<T>		*_prev;
+		node<T>		*_next;
 
 	public:
-		node(void) : prev(NULL), next(NULL) { }
-		node(T const &value) : data(value), prev(NULL), next(NULL) { }
-		node(node<T> *prev, T const &value, node<T> *next = NULL) : data(value), prev(prev), next(next) { }
+		node(void) : _prev(NULL), _next(NULL) { }
+		// node(T const &value) : _data(value), _prev(NULL), _next(NULL) { }
+		// node(node<T> *prev, T const &value, node<T> *next = NULL) : data(value), prev(prev), next(next) { }
 		node(const node<T> &other)
 		{
 			(*this) = other;
@@ -37,19 +37,40 @@ class node
 
 		node&		operator=(const node& elem)
 		{
-			this->data = elem.getData();
-			this->prev = elem.prev;
-			this->next = elem.next;
+			this->_data = elem.getData();
+			this->_prev = elem.getPrev();
+			this->_next = elem.getNext();
 		}
 		
 		T&			getData()
 		{
-			return this->data;
+			return this->_data;
 		}
 		const T&	getData() const
 		{
-			return this->data;
+			return this->_data;
 		}
+
+		node	*&getNext(void)
+		{
+			return (this->_next);
+		}
+
+		node	*&getPrev(void)
+		{
+			return (this->_prev);
+		}
+
+		node	*getNext(void) const
+		{
+			return (this->_next);
+		}
+
+		node	*getPrev(void) const
+		{
+			return (this->_prev);
+		}
+	
 };
 
 # endif

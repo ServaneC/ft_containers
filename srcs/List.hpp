@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 14:32:39 by schene            #+#    #+#             */
-/*   Updated: 2021/02/01 10:36:20 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/02 11:18:54 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ namespace ft
 			
 			reference			operator*()
 			{
-				return (this->it->data);
+				return (this->it->getData());
 			}
 
 			const_reference		operator*() const
@@ -71,37 +71,37 @@ namespace ft
 			
 			pointer operator->()
 			{
-				return (this->it);
+				return (this->it->getData());
 			}
 	
 			const_pointer operator->() const
 			{
-				return (this->it);
+				return (this->it->getData());
 			}
 
 			listIterator	operator++()
 			{
-				this->it = this->it->next;
+				this->it = this->it->getNext();
 				return (*this);
 			}
 			
 			listIterator	operator++(int)
 			{
 				listIterator tmp = *this;
-				this->it = this->it->next;
+				this->it = this->it->getNext();
 				return (tmp);
 			}
 
 			listIterator	operator--()
 			{
-				this->it = this->it->prev;
+				this->it = this->it->getPrev();
 				return (*this);
 			}
 			
 			listIterator	operator--(int)
 			{
 				listIterator tmp = *this;
-				this->it = this->it->prev;
+				this->it = this->it->getPrev();
 				return (tmp);
 			}
 
@@ -142,18 +142,26 @@ namespace ft
 			size_type		_size;
 			allocator_type	_alloc;
 
-			void			deep_clean()
+			void	starter_node()
 			{
-				this->clear();
-				for (iterator it(this->_head); it != this->_tail; it++)
-					_alloc.deallocate(it.getIt(), 1);
-				this->_head = _alloc.allocate(1);
-				this->_tail = _alloc.allocate(1);
-				this->_head->data = 0;
-				this->_head->next = this->_tail;
-				this->_head->prev = this->_tail;
-				this->_tail->prev = this->_head;
-				this->_tail->next = this->_head;
+				this->_head = this->_alloc.allocate(1);
+				this->_head->getNext() = NULL;
+				this->_head->getPrev() = NULL;
+				this->_tail = this->_head;
+				// this->_tail = this->_alloc.allocate(1);
+				// this->_tail->getNext() = this->_head;
+				// this->_tail->getPrev() = this->_head;
+				// this->_head->getNext() = this->_tail;
+				// this->_head->getPrev() = this->_tail;
+			}
+
+			void	push_first_node(node_pointer new_node)
+			{
+				new_node->getNext() = this->_tail;
+				new_node->getPrev() = this->_tail;
+				this->_head = new_node;
+				this->_tail->getNext() = this->_head;
+				this->_tail->getPrev() = this->_head;
 			}
 
 		public:
@@ -161,46 +169,51 @@ namespace ft
 			explicit list (const allocator_type& alloc = allocator_type()) : _size(0)
 			{
 				this->_alloc = static_cast<allocator_type>(alloc);
-				this->_head = _alloc.allocate(1);
-				this->_tail = _alloc.allocate(1);
-				this->_head->next = this->_tail;
-				this->_head->prev = this->_tail;
-				// this->_head->data = NULL;
-				this->_tail->prev = this->_head;
-				this->_tail->next = this->_head;
-
+				this->starter_node();
 			}
 			
 			explicit list (size_type n, const value_type& val = value_type(),
                 const allocator_type& alloc = allocator_type()) : _size(0)
 			{
-				_alloc = static_cast<allocator_type>(alloc);
-				this->_head = _alloc.allocate(1);
-				this->_tail = _alloc.allocate(1);
-				this->_head->next = this->_tail;
-				this->_head->prev = this->_tail;
-				this->_tail->prev = this->_head;
-				this->_tail->next = this->_head;
+				this->_alloc = static_cast<allocator_type>(alloc);
+				this->starter_node();
 				for (size_type i = 0; i < n; i++)
 					this->push_back(val);
 			}
 			
-  			// list (listIterator first, listIterator last,
-         	// 		const allocator_type& alloc = allocator_type());
+  			list (iterator first, iterator last,
+         			const allocator_type& alloc = allocator_type()) : _size(0)
+			{
+				this->_alloc = static_cast<allocator_type>(alloc);
+				this->starter_node();
+				this->assign(first, last);
+			}
 			
-			// list (const list& x);
+			list (const list& x) : _size(0)
+			{
+				this->starter_node();
+				this->assign(x.begin(), x.end());
+			}
 
 			//---------------- DESTRUCTOR ----------------
 
 			virtual ~list()
 			{
 				this->clear();
-				// for (iterator it = this->begin(); it != this->end(); it++)
-				// 		_alloc.deallocate(it.getIt(), 1);
+				for (iterator it = this->begin(); it != this->end(); it++)
+						_alloc.deallocate(it.getIt(), 1);
 				this->_head = NULL;
 				this->_tail = NULL;
 				this->_size = 0;
 			}
+
+			//---------------- OPERATOR = ----------------
+			list& 		operator=(const list& x)
+			{
+				this->assign(x.begin(), x.end());
+				return (*this);
+			}
+
 			//---------------- ITERATOR ----------------
 			iterator begin()
 			{
@@ -239,13 +252,13 @@ namespace ft
 
 			const_reverse_iterator rend() const
 			{
-				return (reverse_iterator(this->begin()));
+				return (const_reverse_iterator(this->begin()));
 			}
 
 			//---------------- CAPACITY ----------------
 			bool		empty() const
 			{
-				if (_size == 0)
+				if (this->_size == 0)
 					return true;
 				return false;
 			}
@@ -262,56 +275,55 @@ namespace ft
 			//---------------- ELEMENT ACCESS ----------
 			reference front()
 			{
-				return (this->_head->data);
+				return (this->_head->getData());
 			}
 
 			const_reference front() const
 			{
-				return (this->_head->data);
+				return (this->_head->getData());
 			}
 
 			reference back()
 			{
-				return (this->_tail->prev->data);
+				return (this->_tail->getPrev()->getData());
 			}
 
 			const_reference back() const
 			{
-				return (this->_tail->prev->data);
+				return (this->_tail->getPrev()->getData());
 			}
 
 			//---------------- MODIFIER ----------------
 
   			void		assign(iterator first, iterator last)
 			{
-				this->deep_clean();
+				this->clear();
 				while (first != last)
 				{
-					this->push_back(first.getIt()->data);
+					this->push_back(*first);
 					first++;
 				}
 			}
 	
 			void		assign (size_type n, const value_type& val)
 			{
-				this->deep_clean();
+				this->clear();
 				for (size_type i = 0; i < n; i++)
 					this->push_back(val);
 			}
 
 			void push_front (const value_type& val)
 			{
-				if (!this->_head->data)
-				{
-					this->_head->data = val;
-				}
+				node_pointer new_node = this->_alloc.allocate(1);
+				new_node->getData() = val;
+
+				if (!this->_size)
+					push_first_node(new_node);
 				else
 				{
-					node_pointer new_node = _alloc.allocate(1);
-					new_node->data = val;
-					new_node->prev = this->_head->prev;
-					new_node->next = this->_head;
-					this->_head->prev = new_node;
+					new_node->getPrev() = this->_head->getPrev() ;
+					new_node->getNext() = this->_head;
+					this->_head->getPrev()  = new_node;
 					this->_head = new_node;
 				}
 				this->_size++;
@@ -320,9 +332,9 @@ namespace ft
 			void pop_front()
 			{
 				node_pointer to_destroy = this->_head;
-				this->_head = to_destroy->next;
-				this->_head->prev = to_destroy->prev;
-				this->_tail->next = this->_head;
+				this->_head = to_destroy->getNext();
+				this->_head->getPrev() = to_destroy->getPrev();
+				this->_tail->getNext() = this->_head;
 				_alloc.destroy(to_destroy);
 				_alloc.deallocate(to_destroy, 1);
 				this->_size--;
@@ -330,27 +342,26 @@ namespace ft
 
 			void		push_back (const value_type& val)
 			{
+				node_pointer new_node = this->_alloc.allocate(1);
+				new_node->getData() = val;
+
 				if (!this->_size)
-				{
-					this->_head->data = val;
-				}
+					push_first_node(new_node);
 				else
 				{
-					node_pointer new_node = this->_alloc.allocate(1);
-					new_node->data = val;
-					this->_tail->prev->next = new_node;
-					new_node->prev = this->_tail->prev;
-					new_node->next = this->_tail;
-					this->_tail->prev = new_node;
-				}
+					this->_tail->getPrev()->getNext() = new_node;
+					new_node->getPrev() = this->_tail->getPrev();
+					new_node->getNext()  = this->_tail;
+					this->_tail->getPrev() = new_node;
+				}		
 				this->_size++;
 			}
 
 			void pop_back()
 			{
-				node_pointer to_destroy = this->_tail->prev;
-				to_destroy->prev->next = this->_tail;
-				this->_tail->prev = to_destroy->prev;
+				node_pointer to_destroy = this->_tail->getPrev();
+				to_destroy->getPrev()->getNext() = this->_tail;
+				this->_tail->getPrev() = to_destroy->getPrev();
 				_alloc.destroy(to_destroy);
 				_alloc.deallocate(to_destroy, 1);
 				this->_size--;
@@ -359,31 +370,59 @@ namespace ft
 			iterator insert (iterator position, const value_type& val)
 			{
 				insert(position, 1, val);
-				return iterator(position.getIt()->prev);
+				return iterator(position.getIt()->getPrev());
 			}
 	
    			void insert (iterator position, size_type n, const value_type& val)
 			{
 				for (size_type i = 0; i < n; i++)
 				{
-					node_pointer prev = position.getIt()->prev;
+					node_pointer prev = position.getIt()->getPrev();
 					node_pointer next = position.getIt();
 					node_pointer new_node = this->_alloc.allocate(1);
 
-					new_node->data = val;
-					new_node->prev = prev;
-					prev->next = new_node;
-					new_node->next = next;
-					next->prev = new_node;
+					new_node->getData() = val;
+					new_node->getPrev() = prev;
+					prev->getNext() = new_node;
+					new_node->getNext() = next;
+					next->getPrev() = new_node;
+					if (position.getIt() == this->_head && i == 0)
+						this->_head = new_node;
 					this->_size++;
 				}
 			}
 
     		void insert (iterator position, iterator first, iterator last)
 			{
+				node_pointer prev = position.getIt()->getPrev();
+				
+				if (position.getIt() == this->_head)
+				{
+					node_pointer new_node = this->_alloc.allocate(1);
+					node_pointer to_copy = first.getIt();
+					
+					new_node->getData() = to_copy->getData();
+					prev->getNext()= new_node;
+					new_node->getPrev() = prev;
+					new_node->getNext() = position.getIt();
+					position.getIt()->getPrev() = new_node;
+					this->_head = new_node;
+					prev = new_node;
+					this->_size++;
+					first++;
+				}
 				while (first != last)
 				{
+					node_pointer new_node = this->_alloc.allocate(1);
+					node_pointer to_copy = first.getIt();
 					
+					new_node->getData() = to_copy->getData();
+					prev->getNext()= new_node;
+					new_node->getPrev() = prev;
+					new_node->getNext() = position.getIt();
+					position.getIt()->getPrev() = new_node;
+					prev = new_node;
+					this->_size++;
 					first++;
 				}
 			}
@@ -399,8 +438,8 @@ namespace ft
 				while (first != last)
 				{
 					node_pointer to_destroy = first.getIt();
-					to_destroy->prev->next = to_destroy->next;
-					to_destroy->next->prev = to_destroy->prev;
+					to_destroy->getPrev()->getNext() = to_destroy->getNext();
+					to_destroy->getNext()->getPrev() = to_destroy->getPrev();
 					if (to_destroy != this->_head)
 					{
 						_alloc.destroy(to_destroy);
@@ -408,7 +447,7 @@ namespace ft
 					}
 					else
 					{
-						this->_head = to_destroy->next;
+						this->_head = to_destroy->getNext();
 					}
 					this->_size--;
 					first++;
@@ -436,27 +475,67 @@ namespace ft
 
 			void		clear()
 			{
-				if (this->_size > 0)
-				{
-					for (iterator it(this->_head); it != this->_tail; it++)
-						this->_alloc.destroy(it.getIt());
-				}
-				this->_size = 0;
+				this->erase(this->begin(), this->end());
 			}
 
 			//---------------- OPERATIONS ----------------
-			// void splice (iterator position, list& x);
-			// void splice (iterator position, list& x, iterator i);
-			// void splice (iterator position, list& x, iterator first, iterator last);
+			void splice (iterator position, list& x)
+			{
+				this->splice(position, x, x.begin(), x.end());
+			}
 
-			// void remove (const value_type& val);
+			void splice (iterator position, list& x, iterator i)
+			{
+				this->splice(position, x, i, ++i);
+			}
 
-			// template <class Predicate>
-  			// void remove_if (Predicate pred);
+			void splice (iterator position, list& x, iterator first, iterator last)
+			{
+				this->insert(position, first, last);
+				x.erase(first, last);
+			}
 
-			// void unique();
-			// template <class BinaryPredicate>
-			//   void unique (BinaryPredicate binary_pred);
+			void remove (const value_type& val)
+			{
+				for (iterator it = this->begin(); it != this->end(); ++it)
+				{
+					if (*it == val)
+						this->erase(it);
+				}
+			}
+
+			template <class Predicate>
+  			void remove_if (Predicate pred)
+			{
+				for (iterator it = this->begin(); it != this->end(); ++it)
+				{
+					if (pred(*it))
+						this->erase(it);
+				}
+			}
+
+			void unique()
+			{
+				for (iterator it = ++this->begin(); it != this->end(); ++it)
+				{
+					if (*it == it.getIt()->getPrev()->getData())
+					{
+						this->erase(it);
+					}
+				}
+			}
+
+			template <class BinaryPredicate>
+			void unique (BinaryPredicate binary_pred)
+			{
+				for (iterator it = ++this->begin(); it != this->end(); ++it)
+				{
+					if (binary_pred(*it, it.getIt()->getPrev()->getData()))
+					{
+						this->erase(it);
+					}
+				}
+			}
 
 			// void merge (list& x);
 			// template <class Compare>

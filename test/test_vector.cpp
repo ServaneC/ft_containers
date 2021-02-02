@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.cpp                                           :+:      :+:    :+:   */
+/*   test_vector.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 10:13:03 by schene            #+#    #+#             */
-/*   Updated: 2021/01/19 15:54:43 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/01 18:10:23 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	compareVector(std::string function, ft::vector<T> myv, std::vector<T> vecto
 		std::cout << _YELLOW << "myv   ";
 		printContainer(myv);
 		std::cout << _YELLOW<< "vector";
-		printContainer(myv);
+		printContainer(vector);
 	}
 }
 
