@@ -6,13 +6,14 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 18:03:28 by schene            #+#    #+#             */
-/*   Updated: 2021/02/02 11:25:48 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/05 11:35:44 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iomanip>
 #include <list>
 #include <limits>
+#include <functional>
 #include "utils.hpp"
 #include "color.h"
 #include "../srcs/List.hpp"
@@ -62,6 +63,17 @@ void	compareList(std::string function, ft::list<T> mylst, std::list<T> list)
 		std::cout << _YELLOW<< "list";
 		printContainer(list);
 	}
+}
+
+bool		sup_five(const int val)
+{
+	return (val > 5);
+}
+
+bool		sort_reverse(const int &a, const int &b)
+{
+	// std::cout << a << " < " << b << " ? " << std::boolalpha << (a < b) << std::endl;
+	return (a < b);
 }
 
 void		test_list(void)
@@ -227,5 +239,176 @@ void		test_list(void)
 	list.clear();
 
 	compareList("list.clear()", mylst, list);
+
+	std::cout << _BLUE << "# push front test" << _END << std::endl;
+	for (int i = 5; i > 0; --i)
+	{
+		mylst.push_front(i);
+		list.push_front(i);
+	}
+	compareList("list.push_front(i)", mylst, list);
+
+	std::cout << _YELLOW << "myfill "; printContainer(myfill);
+	std::cout << _YELLOW << "fill   "; printContainer(fill);
+
+	std::cout << _BLUE << "# splice test (single element)" << _END << std::endl;
 	
+	mylst.splice(mylst.begin(), myfill, myfill.begin());
+	list.splice(list.begin(), fill, fill.begin());
+
+	compareList("list.splice(list.begin(), fill, fill.begin())", mylst, list);
+	std::cout << _YELLOW << "myfill "; printContainer(myfill);
+	std::cout << _YELLOW << "fill   "; printContainer(fill);
+
+	std::cout << _BLUE << "# splice test  (element range)" << _END << std::endl;
+	
+	mypos = myfill.end();
+	pos = fill.end();
+	
+	for (int i = 3; i > 0; i--)
+	{
+		--mypos;
+		--pos;
+	}
+
+	mylst.splice(mylst.begin(), myfill, mypos, myfill.end());
+	list.splice(list.begin(), fill, pos, fill.end());
+
+	compareList("list.splice(list.begin(), fill, pos, list.end())", mylst, list);
+	std::cout << _YELLOW << "myfill "; printContainer(myfill);
+	std::cout << _YELLOW << "fill   "; printContainer(fill);
+
+	std::cout << _BLUE << "# splice test (entire list)" << _END << std::endl;
+	
+	mylst.splice(--mylst.end(), myfill);
+	list.splice(--list.end(), fill);
+
+	compareList("list.splice(--list.end(), fill)", mylst, list);
+	std::cout << _YELLOW << "myfill "; printContainer(myfill);
+	std::cout << _YELLOW << "fill   "; printContainer(fill);
+
+	std::cout << _BLUE << "# remove test" << _END << std::endl;
+	
+	mylst.remove(10);
+	list.remove(10);
+
+	compareList("list.remove(10)", mylst, list);
+
+	std::cout << _BLUE << "# remove_if test" << _END << std::endl;
+	
+	mylst.remove_if(sup_five);
+	list.remove_if(sup_five);
+
+	compareList("list.remove(sup_five)", mylst, list);
+
+	std::cout << _BLUE << "# unique test" << _END << std::endl;
+	
+	mylst.unique();
+	list.unique();
+
+	compareList("list.unique()", mylst, list);
+	
+	std::cout << _BLUE << "# push back 1" << _END << std::endl;
+	
+	mylst.push_back(1);
+	list.push_back(1);
+
+	compareList("list.push_back(1)", mylst, list);
+	
+	mypos = mylst.begin();
+	pos = list.begin();
+
+	for (int i = 0; i < 3; i++)
+	{
+		++mypos;
+		++pos;
+	}	
+	// std::cout << "mypos = " << *mypos << std::endl;
+	// std::cout << "pos = " << *pos << std::endl;
+	std::cout << _YELLOW << "mylst.back() -> " << _GREEN << mylst.back() << std::endl;
+	std::cout <<_YELLOW <<  "list.back()  -> " << _GREEN << list.back() << std::endl;
+
+	// mylst.sort(sort_reverse);
+	// list.sort(std::greater<int>()); 
+	// mylst.sort(sort_reverse);
+	// list.sort(std::greater<int>()); 
+	mylst.sort();
+	list.sort(); 
+	compareList("list.sort(sort_reverse)", mylst, list);
+
+	// std::cout << "mypos = " << *mypos << std::endl;
+	// std::cout << "pos = " << *pos << std::endl;
+
+	std::cout << _YELLOW << "mylst.back() -> " << _GREEN << mylst.back() << std::endl;
+	std::cout <<_YELLOW <<  "list.back()  -> " << _GREEN << list.back() << std::endl;
+
+	// for (int i = 10; i < 20; i++)
+	// 	fill.push_back(i);
+	// fill.sort(std::greater<int>());
+
+	// fill.push_back(3);
+	fill.push_back(2);
+	fill.push_back(42);
+	fill.push_back(20);
+	fill.push_back(7);
+	fill.push_back(56);
+	fill.push_back(2);
+	fill.push_back(100);
+
+	myfill.push_back(2);
+	myfill.push_back(42);
+	myfill.push_back(20);
+	myfill.push_back(7);
+	myfill.push_back(56);
+	myfill.push_back(2);
+	myfill.push_back(100);
+
+	// myfill.sort(sort_reverse);
+	// fill.sort(std::greater<int>());
+	myfill.sort();
+	fill.sort(); 
+	compareList("fill before merge", myfill, fill);
+
+
+	mylst.merge(myfill, sort_reverse);
+	list.merge(fill, std::greater<int>());
+	// mylst.merge(myfill);
+	// list.merge(fill);
+	
+	compareList("fill after merge", myfill, fill);
+	compareList("list.merge(fill)", mylst, list);
+
+	mylst.reverse();
+	list.reverse();
+
+	compareList("list.reverse()", mylst, list);
+
+	for (int i = 1; i <= 10; i++)
+	{
+		fill.push_back(i);
+		myfill.push_back(i);
+	}
+	
+	compareList("fill before", myfill, fill);
+
+	mylst.swap(myfill);
+	list.swap(fill);
+
+	compareList("fill after", myfill, fill);
+	compareList("list.swap(fill)", mylst, list);
+
+	std::cout << "list == fill ? " << std::boolalpha << (list == fill) << std::endl;
+	std::cout << "list != fill ? " << std::boolalpha << (list != fill) << std::endl;
+	std::cout << "list > fill ? " << std::boolalpha << (list > fill) << std::endl;
+	std::cout << "list >= fill ? " << std::boolalpha << (list >= fill) << std::endl;
+	std::cout << "list < fill ? " << std::boolalpha << (list < fill) << std::endl;
+	std::cout << "list <= fill ? " << std::boolalpha << (list <= fill) << std::endl << std::endl;
+
+	std::cout << "mylst == myfill ? " << std::boolalpha << (mylst == myfill) << std::endl;
+	std::cout << "mylst != myfill ? " << std::boolalpha << (mylst != myfill) << std::endl;
+	std::cout << "mylst > myfill ? " << std::boolalpha <<  (mylst > myfill) << std::endl;
+	std::cout << "mylst >= myfill ? " << std::boolalpha << (mylst >= myfill) << std::endl;
+	std::cout << "mylst < myfill ? " << std::boolalpha <<  (mylst < myfill) << std::endl;
+	std::cout << "mylst <= myfill ? " << std::boolalpha << (mylst <= myfill) << std::endl << std::endl;
+
 }
