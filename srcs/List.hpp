@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 14:32:39 by schene            #+#    #+#             */
-/*   Updated: 2021/02/05 11:36:45 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/15 21:35:19 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,9 @@
 
 # include <memory>
 
-#include "Node.hpp"
-#include "Reverse_iterator.hpp"
+# include "Node.hpp"
+# include "Reverse_iterator.hpp"
+# include "ft_utils.hpp"
 # include <iostream>
 
 namespace ft
@@ -79,7 +80,7 @@ namespace ft
 				return (this->it->getData());
 			}
 
-			listIterator	operator++()
+			listIterator	&operator++()
 			{
 				this->it = this->it->getNext();
 				return (*this);
@@ -92,7 +93,7 @@ namespace ft
 				return (tmp);
 			}
 
-			listIterator	operator--()
+			listIterator	&operator--()
 			{
 				this->it = this->it->getPrev();
 				return (*this);
@@ -186,25 +187,24 @@ namespace ft
 
 		public:
 			//---------------- CONSTRUCTOR ----------------
-			explicit list (const allocator_type& alloc = allocator_type()) : _size(0)
+			explicit list (const allocator_type& alloc = allocator_type()) : _size(0), _alloc(alloc)
 			{
-				this->_alloc = static_cast<allocator_type>(alloc);
 				this->starter_node();
 			}
 			
 			explicit list (size_type n, const value_type& val = value_type(),
-                const allocator_type& alloc = allocator_type()) : _size(0)
+                const allocator_type& alloc = allocator_type()) : _size(0), _alloc(alloc)
 			{
-				this->_alloc = static_cast<allocator_type>(alloc);
 				this->starter_node();
 				for (size_type i = 0; i < n; i++)
 					this->push_back(val);
 			}
 			
-  			list (iterator first, iterator last,
-         			const allocator_type& alloc = allocator_type()) : _size(0)
+			template < class InputIter>
+			list(typename ft::enable_if<!std::numeric_limits<InputIter>::is_integer, InputIter>::type first,
+				InputIter last, const allocator_type& alloc = allocator_type()) : 
+			 _size(0), _alloc(alloc)
 			{
-				this->_alloc = static_cast<allocator_type>(alloc);
 				this->starter_node();
 				this->assign(first, last);
 			}
@@ -220,8 +220,16 @@ namespace ft
 			virtual ~list()
 			{
 				this->clear();
-				for (iterator it = this->begin(); it != this->end(); it++)
-						_alloc.deallocate(it.getIt(), 1);
+				if (!this->_size)
+					this->_alloc.deallocate(this->_head, 1);
+				else
+				{
+					for (iterator it = this->begin(); it != this->end(); it++)
+					{
+						this->_alloc.destroy(it.getIt());
+						this->_alloc.deallocate(it.getIt(), 1);
+					}
+				}
 				this->_head = NULL;
 				this->_tail = NULL;
 				this->_size = 0;
@@ -315,15 +323,12 @@ namespace ft
 
 			//---------------- MODIFIER ----------------
 
-  			void		assign(iterator first, iterator last)
+			template <class InputIter>
+				void	assign(typename ft::enable_if<!std::numeric_limits<InputIter>::is_integer, 
+					InputIter>::type first, InputIter last)
 			{
 				this->clear();
-				// this->insert(this->begin(), first, last);
-				while (first != last)
-				{
-					this->push_back(*first);
-					first++;
-				}
+				this->insert(this->begin(), first, last);
 			}
 	
 			void		assign (size_type n, const value_type& val)
@@ -355,8 +360,28 @@ namespace ft
 
 			iterator insert (iterator position, const value_type& val)
 			{
-				insert(position, 1, val);
-				return iterator(position.getIt()->getPrev());
+				node_pointer new_node = this->_alloc.allocate(1);
+				
+				this->_alloc.construct(new_node, val);
+				if (!this->_size)
+					push_first_node(new_node);
+				else if (position == this->_head)
+				{
+					new_node->getPrev() = this->_tail;
+					new_node->getNext() = this->_head;
+					this->_head->getPrev() = new_node;
+					this->_head = new_node;
+					this->_tail->getNext() = this->_head;
+				}
+				else
+				{
+					new_node->getPrev() = position.getIt()->getPrev();
+					position.getIt()->getPrev()->getNext() = new_node;
+					position.getIt()->getPrev() = new_node;
+					new_node->getNext() = position.getIt();
+				}
+				this->_size++;
+				return iterator(new_node);
 			}
 	
    			void insert (iterator position, size_type n, const value_type& val)
@@ -383,13 +408,12 @@ namespace ft
 				}
 			}
 
-    		void insert (iterator position, iterator first, iterator last)
+			template <class InputIter>
+				void insert(iterator position, InputIter first, 
+					typename ft::enable_if<!std::numeric_limits<InputIter>::is_integer, InputIter>::type last)
 			{
 				while (first != last)
-				{
-					this->insert(position, *first);
-					first++;
-				}
+					this->insert(position, *first++);
 			}
 		
 			iterator erase (iterator position)
@@ -403,17 +427,18 @@ namespace ft
 				while (first != last)
 				{
 					node_pointer to_destroy = first.getIt();
+					++first;
 					to_destroy->getPrev()->getNext() = to_destroy->getNext();
 					to_destroy->getNext()->getPrev() = to_destroy->getPrev();
-					if (to_destroy != this->_head)
+					if (to_destroy == this->_head)
 					{
-						_alloc.destroy(to_destroy);
-						_alloc.deallocate(to_destroy, 1);
-					}
-					else
 						this->_head = to_destroy->getNext();
+						this->_head->getPrev() = this->_tail;
+						this->_tail->getNext() = this->_head;
+					}
+					this->_alloc.destroy(to_destroy);
+					this->_alloc.deallocate(to_destroy, 1);
 					this->_size--;
-					first++;
 				}
 				return last;
 			}
@@ -469,7 +494,10 @@ namespace ft
 				for (iterator it = this->begin(); it != this->end(); ++it)
 				{
 					if (*it == val)
+					{
 						this->erase(it);
+						it = --this->begin();
+					}
 				}
 			}
 
@@ -479,7 +507,10 @@ namespace ft
 				for (iterator it = this->begin(); it != this->end(); ++it)
 				{
 					if (pred(*it))
+					{
 						this->erase(it);
+						it = --this->begin();
+					}
 				}
 			}
 
@@ -488,9 +519,7 @@ namespace ft
 				for (iterator it = ++this->begin(); it != this->end(); ++it)
 				{
 					if (*it == it.getIt()->getPrev()->getData())
-					{
-						this->erase(it);
-					}
+						it = this->erase(it);
 				}
 			}
 
@@ -502,6 +531,7 @@ namespace ft
 					if (binary_pred(*it, it.getIt()->getPrev()->getData()))
 					{
 						this->erase(it);
+						it = this->begin();
 					}
 				}
 			}
@@ -510,14 +540,11 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); ++it)
 				{
-					if (!x.empty())
+					if (!x.empty() && *it > *(x.begin()))
 					{
-						if (*it > *(x.begin()))
-						{
-							this->splice(it, x, x.begin());
-							if (it != this->begin())
-								--it;
-						}
+						this->splice(it, x, x.begin());
+						if (it != this->begin())
+							--it;
 					}
 				}
 				this->splice(this->end(), x);
@@ -528,14 +555,11 @@ namespace ft
 			{
 				for (iterator it = this->begin(); it != this->end(); ++it)
 				{
-					if (!x.empty())
+					if (!x.empty() && comp(*(x.begin()), *it))
 					{
-						if (comp(*it, *(x.begin())))
-						{
-							this->splice(it, x, x.begin());
-							if (it != this->begin())
-								--it;
-						}
+						this->splice(it, x, x.begin());
+						if (it != this->begin())
+							--it;
 					}
 				}
 				this->splice(this->end(), x);
@@ -570,7 +594,8 @@ namespace ft
 				{
 					while (iterator(index) != this->end())
 					{
-						if (comp(current->getData(), index->getData()))
+						// if (comp(current->getData(), index->getData()))
+						if (comp( index->getData(), current->getData()))
 							swap_node(current, index);
 						current = index;
 						index = current->getNext();

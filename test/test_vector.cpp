@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 10:13:03 by schene            #+#    #+#             */
-/*   Updated: 2021/02/01 18:10:23 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/15 13:23:57 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,13 @@ void	compareVector(std::string function, ft::vector<T> myv, std::vector<T> vecto
 {
 	std::cout << std::setw(30) << function << ": ";
 	if (myv.empty() != vector.empty())
+	{
 		error_diff(myv, vector);
+	}	
 	else if (myv.size() != vector.size())
+	{
 		error_diff(myv, vector);
+	}
 	else
 	{
 		typename ft::vector<T>::iterator	my_it;
@@ -57,587 +61,641 @@ void	compareVector(std::string function, ft::vector<T> myv, std::vector<T> vecto
 		}
 		
 		std::cout << _GREEN << "OK " << _END << std::endl;
-		std::cout << _YELLOW << "myv   ";
+		std::cout << _YELLOW << "myvect";
 		printContainer(myv);
 		std::cout << _YELLOW<< "vector";
 		printContainer(vector);
 	}
 }
 
-void		test_vector(void)
-{
-	std::cout << _WHITE << "# test_vector" << _END << std::endl;
-	std::cout << std::endl << _YELLOW <<  "/* ********************************************************************** */" << std::endl;
-	std::cout << "/*                          VECTOR TESTS w/INTS                           */" << std::endl;
-	std::cout << "/* ********************************************************************** */" << _END << std::endl;
-	std::cout << std::endl;
+void		test_vector()
+{	
+	{
+		std::cout << _CYAN << "==================== CONSTRUCTOR TEST ====================" << _END << std::endl;
 
-	ft::vector<int>	myv;
-	std::vector<int> vector;
+		ft::vector<int>		myvector;
+		std::vector<int>	vector;
+		
+		compareVector("default -> vector;", myvector, vector);
+	}
+	{
+		ft::vector<int>		myvector(5);
+		std::vector<int>	vector(5);
+			
+		compareVector("fill with one argument -> vector(5);", myvector, vector);
+	}
+	{
+		ft::vector<int>		myvector(5, 42);
+		std::vector<int>	vector(5, 42);
+		compareVector("fill with one argument -> vector(5, 42);", myvector, vector);
 
-	std::cout << "ft::vector<" << _PURPLE << "int" << _END << "> myv;" << std::endl;
-	std::cout << "std::vector<" << _PURPLE << "int" << _END << "> vector;" << std::endl << std::endl;
+		ft::vector<int>		mycopy(myvector);
+		std::vector<int>	copy(vector);
+		compareVector("copy -> copy(vector);", mycopy, copy);
+	}
+	{
+		int myints[] = {566,79,42, 521, 765};
+		ft::vector<int>		myvector(myints, myints + 5);
+		std::vector<int>	vector(myints, myints + 5);
+		compareVector("range from a tab of ints -> vector(myints, myints + 5);", myvector, vector);
 
-	std::cout << _BLUE << "# max_size tests" << _END << std::endl;
-	std::cout << "myv.max_size():\t\t" << myv.max_size() << std::endl;
-	std::cout << "vector.max_size():\t" << vector.max_size() << std::endl;
-	std::cout << std::endl;
+		ft::vector<int>		myrange(myvector.begin() + 1, myvector.end() - 1);
+		std::vector<int>	range(vector.begin() + 1, vector.end() - 1);
+		compareVector("range from a vector -> range(vector.begin() + 1, vector.end() - 1);", myrange, range);
+	}
+	{
+		std::cout << _CYAN << "==================== OPERATOR = TEST ====================" << _END << std::endl;
 
-	std::cout << _BLUE << "# empty and size tests" << _END << std::endl;
-	compareVector("vector.empty()", myv, vector);
-	compareVector("vector.size()", myv, vector);
+		ft::vector<int> my_foo(3,2);
+		ft::vector<int> my_bar(5,5);
+
+		std::vector<int> foo(3,2);
+		std::vector<int> bar(5,5);
+
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
+
+		my_bar = my_foo;
+		bar = foo;
+		std::cout << _PURPLE << "bar = foo" << _END << std::endl;
+
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
+	}
+	{
+		std::cout << _CYAN << "==================== RBEGIN / REND TEST ====================" << _END << std::endl;
+		
+		ft::vector<int>		myvector(5);
+		std::vector<int>	vector(5);
+
+		compareVector("content", myvector, vector);
+
+		ft::vector<int>::reverse_iterator	my_rit = myvector.rbegin();
+		std::vector<int>::reverse_iterator	rit = vector.rbegin();
 	
-	std::cout << _BLUE<< "# testing out_of_range exception" << _END << std::endl;
-	std::cout << "myv.at(0):" << std::endl;
-	try
-	{
-		myv.at(0);
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << "Catching exception myv: " << e.what() << std::endl;
-	}
-	std::cout << "vector.at(0):" << std::endl;
-	try
-	{
-		vector.at(0);
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << "Catching exception vector: " << e.what() << std::endl;
-	}
-	std::cout << std::endl;
+		int i = 0;
+		for (; my_rit != myvector.rend(); ++my_rit)
+			*my_rit = ++i;
+		i = 0;
+		for (; rit!= vector.rend(); ++rit)
+			*rit = ++i;
 
-	std::cout << _BLUE << "# testing capacity() and reserve() function" << _END << std::endl;
-	std::cout << "myv.capacity(): " << myv.capacity() << std::endl;
-	std::cout << "vector.capacity(): " << vector.capacity() << std::endl<< std::endl;
-	myv.reserve(0);
-	vector.reserve(0);
-	std::cout << "myv.reserve(0);" << std::endl;
-	std::cout << "vector.reserve(0);" << std::endl<< std::endl;
-	std::cout << "myv.capacity(): " << myv.capacity() << std::endl;
-	std::cout << "vector.capacity(): " << vector.capacity() << std::endl<< std::endl;
-	myv.reserve(1);
-	vector.reserve(1);
-	std::cout << "myv.reserve(1);" << std::endl;
-	std::cout << "vector.reserve(1);" << std::endl<< std::endl;
-	std::cout << "myv.capacity(): " << myv.capacity() << std::endl;
-	std::cout << "vector.capacity(): " << vector.capacity() << std::endl<< std::endl;
-	std::cout << std::endl;
+		compareVector("after iterating from rbegin to rend", myvector, vector);
+	}
+	{
+		std::cout << _CYAN << "==================== MAX_SIZE TEST ====================" << _END << std::endl;
 
-	std::cout << _BLUE << "# testing reserve exception" << _END << std::endl;
-	std::cout << "myv.reserve(" << std::numeric_limits<size_t>::max() << ");" << std::endl;
-	try
-	{
-		myv.reserve(std::numeric_limits<size_t>::max());
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << "Catching exception myv: " << e.what() << std::endl;
-	}
-	std::cout << "vector.reserve(" << std::numeric_limits<size_t>::max() << ");" << std::endl;
-	try
-	{
-		vector.reserve(std::numeric_limits<size_t>::max());
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << "Catching exception vector: " << e.what() << std::endl;
-	}
-	std::cout << std::endl;
+		ft::vector<int>		myvector;
+		std::vector<int>	vector;
 
-	std::cout << _BLUE << "# resize tests" << _END << std::endl;
-	myv.resize(8);
-	vector.resize(8);
-	compareVector("vector.resize(8)", myv, vector);
-	std::cout << "myv.capacity(): " << myv.capacity() << std::endl;
-	std::cout << "vector.capacity(): " << vector.capacity() << std::endl<< std::endl;
+		// set some content in the vector:
+		for (int i=0; i<100; i++)
+		{
+			myvector.push_back(i);
+			vector.push_back(i);
+		}
+		compareVector("content", myvector, vector);
 
-	std::cout << _BLUE << "# push_back tests" << _END << std::endl;
-	myv.push_back(4);
-	vector.push_back(4);
-	compareVector("vector.push_back(4)", myv, vector);
-	std::cout << "myv.capacity(): " << myv.capacity() << std::endl;
-	std::cout << "vector.capacity(): " << vector.capacity() << std::endl << std::endl;
+		std::cout << _YELLOW << "myvector size: " << myvector.size() << "\n";
+		if (myvector.capacity() >= myvector.size())
+			std::cout << "capacity is fine\n";
+		if (myvector.max_size() > 10000)
+			std::cout << "max_size is sufficient\n";
+		
+		std::cout << "\n" << "vector size: " << vector.size() << "\n";
+		if (vector.capacity() >= vector.size())
+			std::cout << "capacity is fine\n";
+		if (vector.max_size() > 10000)
+			std::cout << "max_size is sufficient\n" << _END;
+
+		std::cout << "\n" << "myvector max_size: " << myvector.max_size() << "\n";
+		std::cout << "vector max_size: " << vector.max_size() << "\n";
+
+		
+	}
+	{
+		std::cout << _CYAN << "==================== RESIZE TEST ====================" << _END << std::endl;
+		
+		ft::vector<int>		myvector;
+		std::vector<int>	vector;
+
+		// set some initial content:
+		for (int i = 1; i < 10; i++)
+		{
+			myvector.push_back(i);
+			vector.push_back(i);
+		}
+		compareVector("content", myvector, vector);
+
+
+		myvector.resize(5);
+		vector.resize(5);
+		compareVector("resize(5)", myvector, vector);
+
+		myvector.resize(8,100);
+		vector.resize(8,100);
+		compareVector("resize(8,100)", myvector, vector);
+
+		myvector.resize(12);
+		vector.resize(12);
+		compareVector("resize(12)", myvector, vector);
+	}
+	{
+		std::cout << _CYAN << "==================== RESIZE TEST 2 ====================" << _END << std::endl;
+		
+		ft::vector<int>		myvector;
+		std::vector<int>	vector;
+		
+		std::cout << "0. myvector size: " << myvector.size() << '\n';
+		std::cout << "0. vector size: " << vector.size() << '\n'<< '\n';
+
+		for (int i=0; i<10; i++)
+		{
+			myvector.push_back(i);
+			vector.push_back(i);
+		}
+		std::cout << "1. myvector size: " << myvector.size() << '\n';
+		std::cout << "1. vector size: " << vector.size() << '\n' << '\n';
+
+		myvector.insert (myvector.end(), 10, 100);
+		vector.insert (vector.end(), 10, 100);
+		std::cout << "2. myvector size: " << myvector.size() << '\n';
+		std::cout << "2. vector size: " << vector.size() << '\n'<< '\n';
+
+		myvector.pop_back();
+		vector.pop_back();
+		std::cout << "3. myvector size: " << myvector.size() << '\n';
+		std::cout << "3. vector size: " << vector.size() << '\n'<< '\n';
+	}
+	{
+		std::cout << _CYAN << "==================== CAPACITY TEST ====================" << _END << std::endl;
+
+		ft::vector<int> myvector;
+		std::vector<int> vector;
+
+		// set some content in the vector:
+		for (int i=0; i<100; i++)
+		{
+			myvector.push_back(i);
+			vector.push_back(i);
+		}
+
+		std::cout << _YELLOW << "myvector size: " << _GREEN << (int) myvector.size() << _YELLOW << '\n';
+
+		if (myvector.capacity() >= myvector.size())
+			std::cout << "capacity is fine\n";
+		else
+			std::cout << _RED << "capcity is not fine : " << myvector.capacity() << '\n';
+		if (myvector.max_size() > 10000)
+			std::cout << "max_size is fine\n";
+
+		std::cout << '\n' << "vector size: " << _GREEN  << (int) vector.size() << _YELLOW << '\n';
+		if (vector.capacity() >= vector.size())
+			std::cout << "capacity is fine\n";
+		else
+			std::cout <<_RED <<  "capcity is not fine : " << vector.capacity() << '\n';
+		if (vector.max_size() > 10000)
+			std::cout << "max_size is fine\n";
+		std::cout << _END;
+	}
+	{
+		std::cout << _CYAN << "==================== EMPTY TEST ====================" << _END << std::endl;
+
+		ft::vector<int>		myvector;
+		std::vector<int>	vector;
+		int sum (0);
+
+		for (int i = 1; i <= 10; i++)
+		{
+			myvector.push_back(i);
+			vector.push_back(i);
+		}
+
+		while (!myvector.empty())
+		{
+			sum += myvector.back();
+			myvector.pop_back();
+		}
+		std::cout << "myvector total: " << sum << '\n';
+
+
+		sum = 0;
+		while (!vector.empty())
+		{
+			sum += vector.back();
+			vector.pop_back();
+		}
+
+		std::cout << "vector total: " << sum << '\n';
+
+		compareVector("empty ", myvector, vector);
+	}
+	{
+		std::cout << _CYAN << "==================== RESERVE TEST ====================" << _END << std::endl;
+
+		ft::vector<int>::size_type	my_sz;
+		std::vector<int>::size_type	sz;
+
+		ft::vector<int>		my_foo;
+		std::vector<int>	foo;
 	
-	std::cout << _BLUE << "# erase tests" << _END << std::endl;
-	myv.erase(myv.begin());
-	vector.erase(vector.begin());
-	compareVector("vector.erase(vector.begin())", myv, vector);
+		my_sz = my_foo.capacity();
+		sz = foo.capacity();
 
-	std::cout << _BLUE << "# testing front and back function" << _END << std::endl;
-	std::cout << "myv.front() => " << myv.front() << std::endl;
-	std::cout << "vector.front() => " << vector.front() << std::endl << std::endl;
+		std::cout << _PURPLE << "making my_foo grow:\n";
+		for (int i = 0; i < 100; ++i)
+		{
+			my_foo.push_back(i);
+			// printContainer(my_foo);
+			if (my_sz != my_foo.capacity())
+			{
+				my_sz = my_foo.capacity();
+				std::cout << _YELLOW << "capacity changed: " << _GREEN << my_sz << '\n';
+			}
+		}
+
+		std::cout << _PURPLE << "making foo grow:\n";
+		for (int i = 0; i < 100; ++i)
+		{
+			foo.push_back(i);
+			if (sz != foo.capacity())
+			{
+				sz = foo.capacity();
+				std::cout << _YELLOW << "capacity changed: " << _GREEN << sz << '\n';
+			}
+		}
+
+		ft::vector<int>		my_bar;
+		std::vector<int>	bar;
 	
-	std::cout << "myv.back() => " << myv.back() << std::endl;
-	std::cout << "vector.back() => " << vector.back() << std::endl << std::endl;
+		my_sz = my_bar.capacity();
+		sz = bar.capacity();
 
-	std::cout << _BLUE << "# pop_back tests" << _END << std::endl;
-	myv.pop_back();
-	vector.pop_back();
-	compareVector("vector.pop_back()", myv, vector);
-	std::cout << "myv.size(): " << myv.size() << std::endl;
-	std::cout << "vector.size(): " << vector.size() << std::endl << std::endl;
-	std::cout << "myv.capacity(): " << myv.capacity() << std::endl;
-	std::cout << "vector.capacity(): " << vector.capacity() << std::endl << std::endl;
+		my_bar.reserve(100);   // this is the only difference with foo above
+		bar.reserve(100);   // this is the only difference with foo above
+		
+		std::cout << _PURPLE << "making my_bar grow:\n";
+		for (int i = 0; i < 100; ++i)
+		{
+			my_bar.push_back(i);
+			if (my_sz != my_bar.capacity())
+			{
+				my_sz = my_bar.capacity();
+				std::cout << _YELLOW << "capacity changed: " << _GREEN << my_sz << _END << '\n';
+			}
+		}
+		try
+		{
+			my_bar.reserve(my_bar.max_size() * 2);
+		}
+		catch(std::exception& e) { std::cout << e.what() << std::endl; }
 
-	std::cout << _BLUE << "# launching clear twice" << _END << std::endl;
-	myv.clear();
-	vector.clear();
-	compareVector("vector.clear()", myv, vector);
-	myv.clear();
-	vector.clear();
-	compareVector("vector.clear()", myv, vector);
-	std::cout << "myv.capacity(): " << myv.capacity() << std::endl;
-	std::cout << "vector.capacity(): " << vector.capacity() << std::endl;
-
-	std::cout << _BLUE << "# assign tests" << _END << std::endl;
-	myv.assign((size_t)10, 8);
-	vector.assign((size_t)10, 8);
-	compareVector("vector.assign(10, 8)", myv, vector);
-
-	myv.assign(myv.begin(), myv.begin() + 4); // wtf that works
-	vector.assign(vector.begin(), vector.begin() + 4);
-	compareVector("vector.assign(vector.begin(), vector.begin() + 4)", myv, vector);
-
-	std::cout << _BLUE << "# insert tests" << _END << std::endl;
-	myv.insert(myv.begin() + 2, 42);
-	vector.insert(vector.begin() + 2, 42);
-	compareVector("vector.insert(vector.begin() + 2, 42);", myv, vector);
-
-	ft::vector<int> myv2;
-	std::vector<int> vector2;
-	std::cout << "ft::vector<" << _PURPLE << "int" << _END << "> myv2;" << std::endl;
-	std::cout << "std::vector<" << _PURPLE << "int" << _END << "> vector2;" << std::endl << std::endl;
-	
-	std::cout << _BLUE << "# swap tests" << _END << std::endl;
-	myv.swap(myv2);
-	vector.swap(vector2);
-	compareVector("vector.swap(vector2)", myv, vector);
-	compareVector("vector2", myv2, vector2);
-
-	myv.swap(myv2);
-	vector.swap(vector2);
-	compareVector("vector.swap(vector2)", myv, vector);
-	compareVector("vector2", myv2, vector2);
-
-	std::cout << _BLUE << "# erase tests" << _END << std::endl;
-	myv.erase(myv.begin() + 2);
-	vector.erase(vector.begin() + 2);
-	compareVector("vector.erase(this->begin() + 2", myv, vector);
-
-	std::cout << _BLUE << "# operator= tests" << _END << std::endl;
-	myv2 = myv;
-	vector2 = vector;
-	compareVector("vector2 = vector", myv2, vector2);
-
-	myv.at(2) = 1;
-	vector.at(2) = 1;
-	compareVector("vector.at(2) = 1", myv, vector);
-
-	myv[1] = 0;
-	vector[1] = 0;
-	compareVector("vector[1] = 0", myv, vector);
-
-	std::cout << std::endl << _BLUE << "# comparaisons tests" << _END << std::endl;
-	std::cout << std::setw(30) << "myv < myv2: " << (myv < myv2) << std::endl;
-	std::cout << std::setw(30) << "vector < vector2: " << (vector < vector2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv > myv2: " << (myv > myv2) << std::endl;
-	std::cout << std::setw(30) << "vector > vector2: " << (vector > vector2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv == myv2: " << (myv == myv2) << std::endl;
-	std::cout << std::setw(30) << "vector == vector2: " << (vector == vector2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv != myv2: " << (myv == myv2) << std::endl;
-	std::cout << std::setw(30) << "vector != vector2: " << (vector == vector2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv <= myv2: " << (myv <= myv2) << std::endl;
-	std::cout << std::setw(30) << "vector <= vector2: " << (vector <= vector2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv >= myv2: " << (myv >= myv2) << std::endl;
-	std::cout << std::setw(30) << "vector >= vector2: " << (vector >= vector2) << std::endl;
-
-	std::cout << std::endl << _YELLOW <<  "/* ********************************************************************** */" << std::endl;
-	std::cout << "/*                          VECTOR TESTS w/std::strings                    */" << std::endl;
-	std::cout << "/* ********************************************************************** */" << _END << std::endl;
-	std::cout << std::endl;
-
-	ft::vector<std::string>	myv_s;
-	std::vector<std::string> vector_s;
-
-	std::cout << "ft::vector<" << _PURPLE << "std::string" << _END << "> myv_s;" << std::endl;
-	std::cout << "std::vector<" << _PURPLE << "std::string" << _END << "> vector_s;" << std::endl << std::endl;
-
-	std::cout << _BLUE << "# max_size tests" << _END << std::endl;
-	std::cout << "myv_s.max_size():\t\t" << myv_s.max_size() << std::endl;
-	std::cout << "vector_s.max_size():\t" << vector_s.max_size() << std::endl;
-	std::cout << std::endl;
-
-	std::cout << _BLUE << "# empty and size tests" << _END << std::endl;
-	compareVector("vector_s.empty()", myv_s, vector_s);
-	compareVector("vector_s.size()", myv_s, vector_s);
-	
-	std::cout << _BLUE<< "# testing out_of_range exception" << _END << std::endl;
-	std::cout << "myv_s.at(0):" << std::endl;
-	try
-	{
-		myv_s.at(0);
+		std::cout << _PURPLE << "making bar grow:\n";
+		for (int i = 0; i < 100; ++i)
+		{
+			bar.push_back(i);
+			if (sz!=bar.capacity())
+			{
+				sz = bar.capacity();
+				std::cout << _YELLOW << "capacity changed: " << _GREEN << sz << _END << '\n';
+			}
+		}
+		try
+		{
+			bar.reserve(bar.max_size() * 2);
+		}
+		catch(std::exception& e) { std::cout << e.what() << std::endl; }
 	}
-	catch (std::exception &e)
-	{
-		std::cerr << "Catching exception myv_s: " << e.what() << std::endl;
+		{
+		std::cout << _CYAN << "==================== OPERATOR [] TEST ====================" << _END << std::endl;
+
+		ft::vector<int>		myvector(10); // 10 zero-initialized elements
+		std::vector<int>	vector(10);
+
+		ft::vector<int>::size_type sz = myvector.size();
+
+		// assign some values:
+		for (unsigned i = 0; i < sz; i++) 
+		{
+			myvector[i] = i;
+			vector[i] = i;
+		}
+
+		compareVector("content", myvector, vector);
+
+		// reverse vector using operator[]:
+		for (unsigned i=0; i < sz/2; i++)
+		{
+			int tmp;
+			tmp = myvector[sz - 1 - i];
+			myvector[sz - 1 - i] = myvector[i];
+			myvector[i] = tmp;
+		}
+
+		for (unsigned i=0; i < sz/2; i++)
+		{
+			int tmp;
+			tmp = vector[sz - 1 - i];
+			vector[sz - 1 - i] = vector[i];
+			vector[i] = tmp;
+		}
+		compareVector("reverse vector using operator[]", myvector, vector);
 	}
-	std::cout << "vector_s.at(0):" << std::endl;
-	try
 	{
-		vector_s.at(0);
+		std::cout << _CYAN << "==================== AT TEST ====================" << _END << std::endl;
+	
+		ft::vector<int> myvector (10);   // 10 zero-initialized ints
+		std::vector<int> vector (10);   // 10 zero-initialized ints
+
+		// assign some values:
+		for (unsigned i=0; i < myvector.size(); i++)
+		{
+			myvector.at(i) = i;
+			vector.at(i) = i;
+		}
+		compareVector("after assigning some value w/ at: ", myvector, vector);
 	}
-	catch (std::exception &e)
 	{
-		std::cerr << "Catching exception vector_s: " << e.what() << std::endl;
+		std::cout << _CYAN << "==================== FRONT TEST ====================" << _END << std::endl;
+
+		ft::vector<int>		myvector;
+		std::vector<int>	vector;
+
+		myvector.push_back(78);
+		vector.push_back(78);
+
+		myvector.push_back(16);
+		vector.push_back(16);
+
+		compareVector("content", myvector, vector);
+
+		std::cout << _YELLOW << "myvector.front() is " << _GREEN << myvector.front() << '\n';
+		std::cout << _YELLOW << "vector.front() is " << _GREEN << vector.front() << _END <<'\n' <<'\n';
+
+		myvector.front() -= myvector.back();
+		vector.front() -= vector.back();
+		
+		compareVector("vector.front() -= vector.back()", myvector, vector);
+
+		std::cout << _YELLOW << "myvector.front() is now " << _GREEN << myvector.front() << '\n';
+		std::cout << _YELLOW << "vector.front() is now " << _GREEN << vector.front() << _END <<'\n';
 	}
-	std::cout << std::endl;
-
-	std::cout << _BLUE << "# testing capacity() and reserve() function" << _END << std::endl;
-	std::cout << "myv_s.capacity(): " << myv_s.capacity() << std::endl;
-	std::cout << "vector_s.capacity(): " << vector_s.capacity() << std::endl<< std::endl;
-	myv_s.reserve(0);
-	vector_s.reserve(0);
-	std::cout << "myv_s.reserve(0);" << std::endl;
-	std::cout << "vector_s.reserve(0);" << std::endl<< std::endl;
-	std::cout << "myv_s.capacity(): " << myv_s.capacity() << std::endl;
-	std::cout << "vector_s.capacity(): " << vector_s.capacity() << std::endl<< std::endl;
-	myv_s.reserve(1);
-	vector_s.reserve(1);
-	std::cout << "myv_s.reserve(1);" << std::endl;
-	std::cout << "vector_s.reserve(1);" << std::endl<< std::endl;
-	std::cout << "myv_s.capacity(): " << myv_s.capacity() << std::endl;
-	std::cout << "vector_s.capacity(): " << vector_s.capacity() << std::endl<< std::endl;
-	std::cout << std::endl;
-
-	std::cout << _BLUE << "# testing reserve exception" << _END << std::endl;
-	std::cout << "myv_s.reserve(" << std::numeric_limits<size_t>::max() << ");" << std::endl;
-	try
 	{
-		myv_s.reserve(std::numeric_limits<size_t>::max());
+		std::cout << _CYAN << "==================== ASSIGN TEST ====================" << _END << std::endl;
+
+		ft::vector<int> first;
+		ft::vector<int> second;
+		ft::vector<int> third;
+
+		std::vector<int> stl_first;
+		std::vector<int> stl_second;
+		std::vector<int> stl_third;
+
+		first.assign (7,100);             // 7 ints with a value of 100
+		stl_first.assign (7,100);             // 7 ints with a value of 100
+
+		ft::vector<int>::iterator it;
+		it = first.begin()+1;
+		std::vector<int>::iterator stl_it;
+		stl_it = stl_first.begin()+1;
+
+		second.assign (it,first.end()-1); 	// the 5 central values of first
+		stl_second.assign (stl_it,stl_first.end()-1); // the 5 central values of first
+
+		int myints[] = {1776,7,4};
+		third.assign (myints, myints+3);   // assigning from array.
+		stl_third.assign (myints, myints+3);   // assigning from array.
+
+		compareVector("first.assign (7,100)", first, stl_first);
+		compareVector("second.assign (it,first.end()-1)", second, stl_second);
+		compareVector("third.assign (myints, myints+3)", third, stl_third);
 	}
-	catch (std::exception &e)
 	{
-		std::cerr << "Catching exception myv_s: " << e.what() << std::endl;
+		std::cout << _CYAN << "==================== PUSH_BACK and BACK TEST ====================" << _END << std::endl;
+
+		ft::vector<int> myvector;
+		std::vector<int> vector;
+
+		myvector.push_back(10);
+		vector.push_back(10);
+
+		while (myvector.back() != 0 && vector.back() != 0)
+		{
+			myvector.push_back ( myvector.back() -1 );
+			vector.push_back ( vector.back() -1 );
+		}
+		compareVector("after a loop of vector.push_back", myvector, vector);
 	}
-	std::cout << "vector_s.reserve(" << std::numeric_limits<size_t>::max() << ");" << std::endl;
-	try
 	{
-		vector_s.reserve(std::numeric_limits<size_t>::max());
+		std::cout << _CYAN << "==================== PUSH_BACK TEST 2====================" << _END << std::endl;
+
+		ft::vector<int>		myvector;
+		std::vector<int>	vector;
+		int myint = 42;
+
+		do {
+			myint += 5;
+			myint /= 9;
+			myint -= 2;
+			myint *= 42;
+			myvector.push_back (myint);
+			vector.push_back (myint);
+		} while (myint < 1000000);
+
+		compareVector("after a loop of push_back", myvector, vector);
+		std::cout << "myvector stores " << int(myvector.size()) << " numbers.\n";
+		std::cout << "vector stores " << int(vector.size()) << " numbers.\n";
 	}
-	catch (std::exception &e)
 	{
-		std::cerr << "Catching exception vector_s: " << e.what() << std::endl;
+		std::cout << _CYAN << "==================== POP_BACK TEST ====================" << _END << std::endl;
+
+		ft::vector<int>		myvector;
+		std::vector<int>	vector;
+		int sum (0);
+
+		myvector.push_back (100);
+		myvector.push_back (200);
+		myvector.push_back (300);
+
+		vector.push_back (100);
+		vector.push_back (200);
+		vector.push_back (300);
+
+		compareVector("content", myvector, vector);
+
+		while (!myvector.empty())
+		{
+			sum+=myvector.back();
+			myvector.pop_back();
+		}
+		std::cout << _YELLOW << "The elements of myvector add up to " << sum << '\n';
+
+		sum = 0;
+		while (!vector.empty())
+		{
+			sum += vector.back();
+			vector.pop_back();
+		}
+
+		std::cout << "The elements of vector add up to " << sum << _END << '\n' << '\n';
+
+		compareVector("after a loop of pop_back", myvector, vector);
 	}
-	std::cout << std::endl;
+	{
+		std::cout << _CYAN << "==================== INSERT TEST ====================" << _END << std::endl;
 
-	std::cout << _BLUE << "# resize tests" << _END << std::endl;
-	myv_s.resize(8, "hi");
-	vector_s.resize(8, "hi");
-	compareVector("vector_s.resize(8, \"hi\")", myv_s, vector_s);
-	std::cout << "myv_s.capacity(): " << myv_s.capacity() << std::endl;
-	std::cout << "vector_s.capacity(): " << vector_s.capacity() << std::endl<< std::endl;
+		ft::vector<int>		myvector(3,100);
+		std::vector<int>	vector(3,100);
+		
+		compareVector("content", myvector, vector);
 
-	std::cout << _BLUE << "# push_back tests" << _END << std::endl;
-	myv_s.push_back("hello");
-	vector_s.push_back("hello");
-	compareVector("vector.push_back(\"hello\")", myv_s, vector_s);
-	std::cout << "myv_s.capacity(): " << myv_s.capacity() << std::endl;
-	std::cout << "vector_s.capacity(): " << vector_s.capacity() << std::endl << std::endl;
+		ft::vector<int>::iterator my_it;
+		std::vector<int>::iterator it;
+
+		my_it = myvector.begin();
+		it = vector.begin();
+		my_it = myvector.insert (my_it , 200);
+		it = vector.insert (it , 200);
+
+		compareVector("vector.insert ( it , 200 )", myvector, vector);
+
+		myvector.insert (my_it, 2, 300);
+		vector.insert (it, 2, 300);
+
+		compareVector("vector.insert (it, 2, 300)", myvector, vector);
+		// "it" no longer valid, get a new one:
+		my_it = myvector.begin();
+		it = vector.begin();
+
+		ft::vector<int> my_anothervector (2,400);
+		std::vector<int> anothervector (2,400);
+
+		myvector.insert (my_it + 2, my_anothervector.begin(), my_anothervector.end());
+		vector.insert (it + 2, anothervector.begin(), anothervector.end());
+		compareVector("vector.insert (it + 2, anothervector.begin(), anothervector.end())", myvector, vector);
+
+		int myarray [] = { 501,502,503 };
+		myvector.insert (myvector.begin(), myarray, myarray+3);
+		vector.insert (vector.begin(), myarray, myarray+3);
+
+		compareVector("vector.insert(vector.begin(), myarray, myarray+3)", myvector, vector);
+	}
+	{
+		std::cout << _CYAN << "==================== ERASE TEST ====================" << _END << std::endl;
+
+		ft::vector<int>		myvector;
+		std::vector<int>	vector;
+
+		// set some values (from 1 to 10)
+		for (int i=1; i<=10; i++)
+		{
+			myvector.push_back(i);
+			vector.push_back(i);
+		}
+
+		compareVector("set some values (from 1 to 10)", myvector, vector);
+
+		// erase the 6th element
+		myvector.erase (myvector.begin()+5);
+		vector.erase (vector.begin()+5);
+
+		compareVector("erase the 6th element", myvector, vector);
+
+		// erase the first 3 elements:
+		myvector.erase (myvector.begin(),myvector.begin()+3);
+		vector.erase (vector.begin(),vector.begin()+3);
+
+		compareVector("erase the first 3 elements", myvector, vector);
+	}
+	{
+		std::cout << _CYAN << "==================== CLEAR TEST ====================" << _END << std::endl;
+
+		ft::vector<int> myvector;
+		myvector.push_back (100);
+		myvector.push_back (200);
+		myvector.push_back (300);
+
+		std::vector<int> vector;
+		vector.push_back (100);
+		vector.push_back (200);
+		vector.push_back (300);
+
+		compareVector("content", myvector, vector);
+
+		myvector.clear();
+		vector.clear();
+		compareVector("after a clear", myvector, vector);
+
 	
-	std::cout << _BLUE << "# erase tests" << _END << std::endl;
-	myv_s.erase(myv_s.begin());
-	vector_s.erase(vector_s.begin());
-	compareVector("vector_s.erase(vector_s.begin())", myv_s, vector_s);
+		myvector.push_back (1101);
+		myvector.push_back (2202);
+		vector.push_back (1101);
+		vector.push_back (2202);
 
-	std::cout << _BLUE << "# testing front and back function" << _END << std::endl;
-	std::cout << "myv_s.front() => " << myv_s.front() << std::endl;
-	std::cout << "vector_s.front() => " << vector_s.front() << std::endl << std::endl;
-	
-	std::cout << "myv_s.back() => " << myv_s.back() << std::endl;
-	std::cout << "vector_s.back() => " << vector_s.back() << std::endl << std::endl;
+		compareVector("after 2 push_back", myvector, vector);
+		
+		myvector.clear();
+		vector.clear();
+		compareVector("after another clear", myvector, vector);
+	}
+	{
+		std::cout << _CYAN << "==================== RELATIONNAL OPERATOR TEST ====================" << _END << std::endl;
+		
+		ft::vector<int> my_foo(3,100);
+		ft::vector<int> my_bar(2,200);
 
-	std::cout << _BLUE << "# pop_back tests" << _END << std::endl;
-	myv_s.pop_back();
-	vector_s.pop_back();
-	compareVector("vector_s.pop_back()", myv_s, vector_s);
-	std::cout << "myv_s.size(): " << myv_s.size() << std::endl;
-	std::cout << "vector_s.size(): " << vector_s.size() << std::endl << std::endl;
-	std::cout << "myv_s.capacity(): " << myv_s.capacity() << std::endl;
-	std::cout << "vector_s.capacity(): " << vector_s.capacity() << std::endl << std::endl;
+		std::vector<int> foo(3,100);
+		std::vector<int> bar(2,200);
 
-	std::cout << _BLUE << "# launching clear twice" << _END << std::endl;
-	myv_s.clear();
-	vector_s.clear();
-	compareVector("vector_s.clear()", myv_s, vector_s);
-	myv_s.clear();
-	vector_s.clear();
-	compareVector("vector_s.clear()", myv_s, vector_s);
-	std::cout << "myv_s.capacity(): " << myv_s.capacity() << std::endl;
-	std::cout << "vector_s.capacity(): " << vector_s.capacity() << std::endl;
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
 
-	std::cout << _BLUE << "# assign tests" << _END << std::endl;
-	myv_s.assign((size_t)10, "code");
-	vector_s.assign((size_t)10, "code");
-	compareVector("vector_s.assign(10, \"code\")", myv_s, vector_s);
+		if (my_foo == my_bar) std::cout << "my_foo and my_bar are equal\n";
+		if (my_foo != my_bar) std::cout << "my_foo and my_bar are not equal\n";
+		if (foo==bar) std::cout << "foo and bar are equal\n";
+		if (foo!=bar) std::cout << "foo and bar are not equal\n";
+		std::cout << std::endl;
+		
+		if (my_foo <  my_bar) std::cout << "my_foo is less than my_bar\n";
+		if (my_foo >  my_bar) std::cout << "my_foo is greater than my_bar\n";
+		if (foo< bar) std::cout << "foo is less than bar\n";
+		if (foo> bar) std::cout << "foo is greater than bar\n";
+		std::cout << std::endl;
 
-	myv_s.assign(myv_s.begin(), myv_s.begin() + 4); // wtf that works
-	vector_s.assign(vector_s.begin(), vector_s.begin() + 4);
-	compareVector("vector_s.assign(vector_s.begin(), vector_s.begin() + 4)", myv_s, vector_s);
+		if (my_foo <= my_bar) std::cout << "my_foo is less than or equal to my_bar\n";
+		if (my_foo >= my_bar) std::cout << "my_foo is greater than or equal to my_bar\n";
+		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+	}
+	{
+		std::cout << _CYAN << "==================== NON MEMBER SWAP TEST ====================" << _END << std::endl;
 
-	std::cout << _BLUE << "# insert tests" << _END << std::endl;
-	myv_s.insert(myv_s.begin() + 2, "42born2code");
-	vector_s.insert(vector_s.begin() + 2, "42born2code");
-	compareVector("vector_s.insert(vector_s.begin() + 2, \"42born2code\");", myv_s, vector_s);
+		// unsigned int i;
+		ft::vector<int>		my_foo (3,100);   // three ints with a value of 100
+		ft::vector<int>		my_bar (5,200);   // five ints with a value of 200
 
-	ft::vector<std::string> myv_s2;
-	std::vector<std::string> vector_s2;
-	std::cout << "ft::vector<" << _PURPLE << "std::string" << _END << "> myv_s2;" << std::endl;
-	std::cout << "std::vector<" << _PURPLE << "std::string" << _END << "> vector_s2;" << std::endl << std::endl;
-	
-	std::cout << _BLUE << "# swap tests" << _END << std::endl;
-	myv_s.swap(myv_s2);
-	vector_s.swap(vector_s2);
-	compareVector("vector_s.swap(vector_s2)", myv_s, vector_s);
-	compareVector("vector_s2", myv_s2, vector_s2);
+		std::vector<int>	foo (3,100);   // three ints with a value of 100
+  		std::vector<int>	bar (5,200);   // five ints with a value of 200
 
-	myv_s.swap(myv_s2);
-	vector_s.swap(vector_s2);
-	compareVector("vector_s.swap(vector_s2)", myv_s, vector_s);
-	compareVector("vector_s2", myv_s2, vector_s2);
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
+		
+		my_foo.swap(my_bar);
+		foo.swap(bar);
 
-	std::cout << _BLUE << "# erase tests" << _END << std::endl;
-	myv_s.erase(myv_s.begin() + 2);
-	vector_s.erase(vector_s.begin() + 2);
-	compareVector("vector_s.erase(this->begin() + 2", myv_s, vector_s);
+		std::cout << _PURPLE << "foo.swap(bar)" << _END << std::endl;
 
-	std::cout << _BLUE << "# operator= tests" << _END << std::endl;
-	myv_s2 = myv_s;
-	vector_s2 = vector_s;
-	compareVector("vector_s2 = vector_s", myv_s2, vector_s2);
-
-	myv_s.at(2) = "world";
-	vector_s.at(2) = "world";
-	compareVector("vector_s.at(2) = \"world\"", myv_s, vector_s);
-
-	myv_s[1] = "hello";
-	vector_s[1] = "hello";
-	compareVector("vector_s[1] = \"hello\"", myv_s, vector_s);
-
-	std::cout << std::endl << _BLUE << "# comparaisons tests" << _END << std::endl;
-	std::cout << std::setw(30) << "myv_s < myv_s2: " << (myv_s < myv_s2) << std::endl;
-	std::cout << std::setw(30) << "vector_s < vector_s2: " << (vector_s < vector_s2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv_s > myv_s2: " << (myv_s > myv_s2) << std::endl;
-	std::cout << std::setw(30) << "vector_s > vector_s2: " << (vector_s > vector_s2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv_s == myv_s2: " << (myv_s == myv_s2) << std::endl;
-	std::cout << std::setw(30) << "vector_s == vector_s2: " << (vector_s == vector_s2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv_s != myv_s2: " << (myv_s == myv_s2) << std::endl;
-	std::cout << std::setw(30) << "vector_s != vector_s2: " << (vector_s == vector_s2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv_s <= myv_s2: " << (myv_s <= myv_s2) << std::endl;
-	std::cout << std::setw(30) << "vector_s <= vector_s2: " << (vector_s <= vector_s2) << std::endl;
-	std::cout << std::endl;
-	std::cout << std::setw(30) << "myv_s >= myv_s2: " << (myv_s >= myv_s2) << std::endl;
-	std::cout << std::setw(30) << "vector_s >= vector_s2: " << (vector_s >= vector_s2) << std::endl;
-	
-	
-	// std::cout << std::endl << _YELLOW <<  "/* ********************************************************************** */" << std::endl;
-	// std::cout << "/*                          VECTOR TESTS w/bool                           */" << std::endl;
-	// std::cout << "/* ********************************************************************** */" << _END << std::endl;
-	// std::cout << std::endl;
-
-	// ft::vector<bool>	myv_b;
-	// std::vector<bool> vector_b;
-
-	// std::cout << "ft::vector<" << _PURPLE << "bool" << _END << "> myv_b;" << std::endl;
-	// std::cout << "std::vector<" << _PURPLE << "bool" << _END << "> vector_b;" << std::endl << std::endl;
-
-	// std::cout << _BLUE << "# max_size tests" << _END << std::endl;
-	// std::cout << "myv_b.max_size():\t\t" << myv_b.max_size() << std::endl;
-	// std::cout << "vector_b.max_size():\t" << vector_b.max_size() << std::endl;
-	// std::cout << std::endl;
-
-	// std::cout << _BLUE << "# empty and size tests" << _END << std::endl;
-	// compareVector("vector_b.empty()", myv_b, vector_b);
-	// compareVector("vector_b.size()", myv_b, vector_b);
-	
-	// std::cout << _BLUE<< "# testing out_of_range exception" << _END << std::endl;
-	// std::cout << "myv_b.at(0):" << std::endl;
-	// try
-	// {
-	// 	myv_b.at(0);
-	// }
-	// catch (std::exception &e)
-	// {
-	// 	std::cerr << "Catching exception myv_b: " << e.what() << std::endl;
-	// }
-	// std::cout << "vector_b.at(0):" << std::endl;
-	// try
-	// {
-	// 	vector_b.at(0);
-	// }
-	// catch (std::exception &e)
-	// {
-	// 	std::cerr << "Catching exception vector_b: " << e.what() << std::endl;
-	// }
-	// std::cout << std::endl;
-
-	// std::cout << _BLUE << "# testing capacity() and reserve() function" << _END << std::endl;
-	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
-	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl<< std::endl;
-	// myv_b.reserve(0);
-	// vector_b.reserve(0);
-	// std::cout << "myv_b.reserve(0);" << std::endl;
-	// std::cout << "vector_b.reserve(0);" << std::endl<< std::endl;
-	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
-	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl<< std::endl;
-	// myv_b.reserve(1);
-	// vector_b.reserve(1);
-	// std::cout << "myv_b.reserve(1);" << std::endl;
-	// std::cout << "vector_b.reserve(1);" << std::endl<< std::endl;
-	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
-	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl<< std::endl;
-	// std::cout << std::endl;
-
-	// std::cout << _BLUE << "# testing reserve exception" << _END << std::endl;
-	// std::cout << "myv_b.reserve(" << std::numeric_limits<size_t>::max() << ");" << std::endl;
-	// try
-	// {
-	// 	myv_b.reserve(std::numeric_limits<size_t>::max());
-	// }
-	// catch (std::exception &e)
-	// {
-	// 	std::cerr << "Catching exception myv_b: " << e.what() << std::endl;
-	// }
-	// std::cout << "vector_b.reserve(" << std::numeric_limits<size_t>::max() << ");" << std::endl;
-	// try
-	// {
-	// 	vector_b.reserve(std::numeric_limits<size_t>::max());
-	// }
-	// catch (std::exception &e)
-	// {
-	// 	std::cerr << "Catching exception vector_b: " << e.what() << std::endl;
-	// }
-	// std::cout << std::endl;
-
-	// std::cout << _BLUE << "# resize tests" << _END << std::endl;
-	// myv_b.resize(8, "hi");
-	// vector_b.resize(8, "hi");
-	// compareVector("vector_b.resize(8, \"hi\")", myv_b, vector_b);
-	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
-	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl<< std::endl;
-
-	// std::cout << _BLUE << "# push_back tests" << _END << std::endl;
-	// myv_b.push_back("hello");
-	// vector_b.push_back("hello");
-	// compareVector("vector.push_back(\"hello\")", myv_b, vector_b);
-	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
-	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl << std::endl;
-	
-	// std::cout << _BLUE << "# erase tests" << _END << std::endl;
-	// myv_b.erase(myv_b.begin());
-	// vector_b.erase(vector_b.begin());
-	// compareVector("vector_b.erase(vector_b.begin())", myv_b, vector_b);
-
-	// std::cout << _BLUE << "# testing front and back function" << _END << std::endl;
-	// std::cout << "myv_b.front() => " << myv_b.front() << std::endl;
-	// std::cout << "vector_b.front() => " << vector_b.front() << std::endl << std::endl;
-	
-	// std::cout << "myv_b.back() => " << myv_b.back() << std::endl;
-	// std::cout << "vector_b.back() => " << vector_b.back() << std::endl << std::endl;
-
-	// std::cout << _BLUE << "# pop_back tests" << _END << std::endl;
-	// myv_b.pop_back();
-	// vector_b.pop_back();
-	// compareVector("vector_b.pop_back()", myv_b, vector_b);
-	// std::cout << "myv_b.size(): " << myv_b.size() << std::endl;
-	// std::cout << "vector_b.size(): " << vector_b.size() << std::endl << std::endl;
-	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
-	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl << std::endl;
-
-	// std::cout << _BLUE << "# launching clear twice" << _END << std::endl;
-	// myv_b.clear();
-	// vector_b.clear();
-	// compareVector("vector_b.clear()", myv_b, vector_b);
-	// myv_b.clear();
-	// vector_b.clear();
-	// compareVector("vector_b.clear()", myv_b, vector_b);
-	// std::cout << "myv_b.capacity(): " << myv_b.capacity() << std::endl;
-	// std::cout << "vector_b.capacity(): " << vector_b.capacity() << std::endl;
-
-	// std::cout << _BLUE << "# assign tests" << _END << std::endl;
-	// myv_b.assign((size_t)10, "code");
-	// vector_b.assign((size_t)10, "code");
-	// compareVector("vector_b.assign(10, \"code\")", myv_b, vector_b);
-
-	// myv_b.assign(myv_b.begin(), myv_b.begin() + 4); // wtf that works
-	// vector_b.assign(vector_b.begin(), vector_b.begin() + 4);
-	// compareVector("vector_b.assign(vector_b.begin(), vector_b.begin() + 4)", myv_b, vector_b);
-
-	// std::cout << _BLUE << "# insert tests" << _END << std::endl;
-	// myv_b.insert(myv_b.begin() + 2, "42born2code");
-	// vector_b.insert(vector_b.begin() + 2, "42born2code");
-	// compareVector("vector_b.insert(vector_b.begin() + 2, \"42born2code\");", myv_b, vector_b);
-
-	// ft::vector<std::string> myv_b2;
-	// std::vector<std::string> vector_b2;
-	// std::cout << "ft::vector<" << _PURPLE << "std::string" << _END << "> myv_b2;" << std::endl;
-	// std::cout << "std::vector<" << _PURPLE << "std::string" << _END << "> vector_b2;" << std::endl << std::endl;
-	
-	// std::cout << _BLUE << "# swap tests" << _END << std::endl;
-	// myv_b.swap(myv_b2);
-	// vector_b.swap(vector_b2);
-	// compareVector("vector_b.swap(vector_b2)", myv_b, vector_b);
-	// compareVector("vector_b2", myv_b2, vector_b2);
-
-	// myv_b.swap(myv_b2);
-	// vector_b.swap(vector_b2);
-	// compareVector("vector_b.swap(vector_b2)", myv_b, vector_b);
-	// compareVector("vector_b2", myv_b2, vector_b2);
-
-	// std::cout << _BLUE << "# erase tests" << _END << std::endl;
-	// myv_b.erase(myv_b.begin() + 2);
-	// vector_b.erase(vector_b.begin() + 2);
-	// compareVector("vector_b.erase(this->begin() + 2", myv_b, vector_b);
-
-	// std::cout << _BLUE << "# operator= tests" << _END << std::endl;
-	// myv_b2 = myv_b;
-	// vector_b2 = vector_b;
-	// compareVector("vector_b2 = vector_b", myv_b2, vector_b2);
-
-	// myv_b.at(2) = "world";
-	// vector_b.at(2) = "world";
-	// compareVector("vector_b.at(2) = \"world\"", myv_b, vector_b);
-
-	// myv_b[1] = "hello";
-	// vector_b[1] = "hello";
-	// compareVector("vector_b[1] = \"hello\"", myv_b, vector_b);
-
-	// std::cout << std::endl << _BLUE << "# comparaisons tests" << _END << std::endl;
-	// std::cout << std::setw(30) << "myv_b < myv_b2: " << (myv_b < myv_b2) << std::endl;
-	// std::cout << std::setw(30) << "vector_b < vector_b2: " << (vector_b < vector_b2) << std::endl;
-	// std::cout << std::endl;
-	// std::cout << std::setw(30) << "myv_b > myv_b2: " << (myv_b > myv_b2) << std::endl;
-	// std::cout << std::setw(30) << "vector_b > vector_b2: " << (vector_b > vector_b2) << std::endl;
-	// std::cout << std::endl;
-	// std::cout << std::setw(30) << "myv_b == myv_b2: " << (myv_b == myv_b2) << std::endl;
-	// std::cout << std::setw(30) << "vector_b == vector_b2: " << (vector_b == vector_b2) << std::endl;
-	// std::cout << std::endl;
-	// std::cout << std::setw(30) << "myv_b != myv_b2: " << (myv_b == myv_b2) << std::endl;
-	// std::cout << std::setw(30) << "vector_b != vector_b2: " << (vector_b == vector_b2) << std::endl;
-	// std::cout << std::endl;
-	// std::cout << std::setw(30) << "myv_b <= myv_b2: " << (myv_b <= myv_b2) << std::endl;
-	// std::cout << std::setw(30) << "vector_b <= vector_b2: " << (vector_b <= vector_b2) << std::endl;
-	// std::cout << std::endl;
-	// std::cout << std::setw(30) << "myv_b >= myv_b2: " << (myv_b >= myv_b2) << std::endl;
-	// std::cout << std::setw(30) << "vector_b >= vector_b2: " << (vector_b >= vector_b2) << std::endl;
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 10:13:22 by schene            #+#    #+#             */
-/*   Updated: 2021/02/05 08:53:22 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/09 15:21:24 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include "color.h"
 
 template <class Container>
-void	printContainer(Container c)
+void	printContainer(Container &c)
 {
 	int								n;
 	typename Container::iterator	i;
@@ -43,5 +43,6 @@ void		test_map(void);
 void		test_stack(void);
 void		test_list(void);
 void		test_vector(void);
+void		test_vector_string(void);
 
 #endif

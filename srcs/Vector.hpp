@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector.hpp                                         :+:      :+:    :+:   */
+/*   Vector.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 10:09:47 by schene            #+#    #+#             */
-/*   Updated: 2021/01/26 14:53:18 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/12 14:26:18 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdexcept>
 # include <iostream>
 
+# include "ft_utils.hpp"
 # include "Reverse_iterator.hpp"
 
 namespace ft
@@ -36,6 +37,8 @@ namespace ft
 			typedef value_type&			reference;
 			typedef const value_type&	const_reference;
 			typedef std::ptrdiff_t		difference_type;
+
+			static const bool			input_iter;
 
 		protected:
 			pointer			it;
@@ -162,6 +165,9 @@ namespace ft
 			}
 	};
 
+	template < class T>
+	const bool vectorIterator<T>::input_iter = true;
+
 	template <typename T, class Allocator >
 	class vector
 	{
@@ -188,35 +194,23 @@ namespace ft
 
 		public:
 			//---------------- CONSTRUCTOR ----------------
-			explicit vector (const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0)
-			{
-				_alloc = static_cast<allocator_type>(alloc);
-				_tab = _alloc.allocate(static_cast<size_t>(this->_capacity));
-			}
+			explicit vector (const allocator_type& alloc = allocator_type()) : 
+				_tab(NULL), _size(0), _capacity(0), _alloc(alloc) {}
 
 			explicit vector (size_type n, const value_type& val = value_type(),
-                const allocator_type& alloc = allocator_type()) : _size(n), _capacity(n)
+                const allocator_type& alloc = allocator_type()) :  _tab(NULL), _size(n), _capacity(n), _alloc(alloc)
 			{
-				_alloc = static_cast<allocator_type>(alloc);
 				_tab = _alloc.allocate(static_cast<size_t>(n));
 				for (size_t i = 0; i < _size; i++)
 					_alloc.construct(_tab + i, val);
 			}
 
-			vector (iterator first, iterator last,
-			    const allocator_type& alloc = allocator_type()) : _size(0), _capacity(0)
+			template < class InputIter>
+			vector(typename ft::enable_if<!std::numeric_limits<InputIter>::is_integer, InputIter>::type first,
+				InputIter last, const allocator_type& alloc = allocator_type()) :
+				  _tab(NULL), _size(0), _capacity(0), _alloc(alloc)
 			{
-				for (iterator it = first; it != last; it++)
-					this->_size++;
-				this->_capacity = this->_size;
-				this->_alloc = static_cast<allocator_type>(alloc);
-				this->_tab = _alloc.allocate(static_cast<size_t>(this->_size));
-				size_type i = 0;
-				for (iterator it = first; it != last; it++)
-				{
-					_alloc.construct(_tab + i, *it);
-					i++;
-				}
+				this->assign(first, last);
 			}
 
 			vector (const vector& x) : _size(x.size()), _capacity(x.capacity())
@@ -231,7 +225,9 @@ namespace ft
 			{
 				if (this->_tab)
 				{
-					this->clear();	
+					this->clear();
+					if (this->_size)
+						this->_alloc.destroy(this->_tab);
 					this->_alloc.deallocate(this->_tab, this->_capacity);
 				}
 				this->_tab = NULL;
@@ -305,14 +301,16 @@ namespace ft
 			{
 				
 				if (n < this->_size)
-				{
-					for (size_type i = n; i < this->_size; i++)
-						_alloc.destroy(this->_tab + i);
-				}
+					erase(this->begin() + n, this->end());
 				else if (n > this->_size)
 				{
 					if (n > this->_capacity)
-						this->reserve(n);
+					{
+						if (n <= (this->_capacity * 2 ) && this->_capacity)
+							this->reserve(this->_capacity * 2);
+						else
+							this->reserve(n);
+					}
 					for (size_type i = this->_size; i < n; i++)
 						_alloc.construct(_tab + i, val);
 				}
@@ -326,22 +324,20 @@ namespace ft
 			
 			bool 		empty() const
 			{
-				if (this->_size == 0)
-					return true;
-				else
-					return false;
+				return (!this->_size);
 			}
 
 			void reserve (size_type n)
 			{
 				if (n > this->_capacity)
 				{
-					allocator_type tmp_alloc;
-					tmp_alloc = static_cast<allocator_type>(this->_alloc);
-					pointer			tmp_tab;
-					tmp_tab = tmp_alloc.allocate(static_cast<size_t>(n));
-					for (size_t i = 0; i < _size; i++)
-						tmp_alloc.construct(tmp_tab + i, _tab[i]);
+					allocator_type	tmp_alloc;
+					pointer			tmp_tab = tmp_alloc.allocate(n);
+
+					for (size_t i = 0; i < this->_size; i++)
+						tmp_alloc.construct(&tmp_tab[i], _tab[i]);
+					if (this->_size)
+						_alloc.destroy(_tab);
 					_alloc.deallocate(_tab, _capacity);
 					this->_capacity = n;
 					this->_alloc = tmp_alloc;
@@ -352,12 +348,12 @@ namespace ft
 			//---------------- ELEMENT ACCESS ----------------
 			reference operator[] (size_type n)
 			{
-				return (_tab[n]);
+				return (this->_tab[n]);
 			}
 			
 			const_reference operator[] (size_type n) const
 			{
-				return (_tab[n]);
+				return (this->_tab[n]);
 			}
 
 			reference	at(size_type n)
@@ -385,147 +381,146 @@ namespace ft
     				std::string arg = stream.str();
 					throw std::out_of_range(arg);
 				}
-				return (_tab[n]);
+				return (this->_tab[n]);
 			}
 
 			reference	front()
 			{
-				return (_tab[0]);
+				return (this->_tab[0]);
 			}
 
 			const_reference	front() const
 			{
-				return (_tab[0]);
+				return (this->_tab[0]);
 			}
 
 			reference			back()
 			{
-				return (_tab[_size - 1]);
+				return (this->_tab[this->_size - 1]);
 			}
 
 			const_reference		back() const
 			{
-				return (_tab[_size - 1]);
+				return (this->_tab[this->_size - 1]);
 			}
 			//---------------- MODIFIER ----------------
 			
-			void assign (iterator first, iterator last)
+			template <class InputIter>
+			void	assign(typename ft::enable_if<!std::numeric_limits<InputIter>::is_integer, 
+				InputIter>::type first, InputIter last)
 			{
-				difference_type new_sz = last - first;
-				this->resize(new_sz);
-				size_type	i = -1;
-				for (iterator it = first; it != last; ++it)
-					this->_tab[++i] = (*it);
+				this->clear();
+				this->insert(this->begin(), first, last);
 			}
 			
 			void assign (size_type n, const value_type& val)
 			{
-				if (this->_size > 0)
-					this->clear();
-				if (n > this->_capacity)
-					this->reserve(n);
+				this->clear();
 				this->resize(n, val);
 			}
 
 			void push_back (const value_type& val)
 			{
-				if (this->_size + 1 > this->capacity())
-					this->reserve(this->_size * 2);
-				this->resize(this->_size + 1, val);
+				this->insert(this->end(), val);
 			}
 
 			void pop_back()
 			{
-				this->resize(this->_size - 1);
+				this->erase(--this->end());
 			}
 
 			iterator insert (iterator position, const value_type& val)
 			{
-				size_type i = 0;
-				while ((&this->_tab[i]) && position.getIt() != (&this->_tab[i]))
-					i++;
+				difference_type idx = position - this->begin();
+
 				this->insert(position, 1, val);
-				pointer		ret = &this->_tab[i];
-				return (iterator(ret));
+				return (iterator(this->begin() + idx));
 			}
 
 			void insert (iterator position, size_type n, const value_type& val)
 			{
-				size_type first = this->_size;
-				while (position.getIt() != (&this->_tab[first]) && first >= 0)
-					first--;
-				if (this->_size + n > this->_capacity)
-					this->reserve(this->_size + n);
-				size_type	old_size = this->_size;
+				difference_type const	idx = position - this->begin();
+				difference_type const	old_end_idx = this->end() - this->begin();
+				iterator				old_end, end;
+
 				this->resize(this->_size + n);
-				size_type	last = first + n;
-				for (size_type j = old_size; j >= first; --j)
-					this->_tab[j + n] = this->_tab[j];
-				while (last-- != first)
-					this->_tab[last] = val;
+
+				end = this->end();
+				position = this->begin() + idx;
+				old_end = this->begin() + old_end_idx;
+				while (old_end != position)
+					*--end = *--old_end;
+				while (n-- > 0)
+					*position++ = val;
 			}
 			
-			void insert (iterator position, iterator first, iterator last)
+			template <class InputIter>
+			void insert(iterator position, InputIter first, 
+				typename ft::enable_if<!std::numeric_limits<InputIter>::is_integer, InputIter>::type last)
 			{
-				size_type n = 0;
-				for (iterator it = first; it != last; it++)
-					n++;
-				size_type i = this->_size;
-				while (position.getIt() != (&this->_tab[i]) && i >= 0)
-					i--;
-				if (this->_size + n > this->_capacity)
-					this->reserve(this->_size + n);
-				size_type	old_size = this->_size;
-				this->resize(this->_size + n);
-				for (size_type j = old_size; j >= i; --j)
-					this->_tab[j + n] = this->_tab[j];
-				size_type index = i;
-				while (first++ != last)
-				{
-					this->_tab[index] = *first.getIt();
-					index++;
-				}	
+				difference_type const	idx = position - this->begin();
+				difference_type const	old_end_idx = this->end() - this->begin();
+				iterator				old_end, end;
+
+				this->resize(this->_size + (last - first));
+
+				end = this->end();
+				position = this->begin() + idx;
+				old_end = this->begin() + old_end_idx;
+				while (old_end != position)
+					*--end = *--old_end;
+				while (first != last)
+					*position++ = *first++;
 			}
 
 			iterator erase (iterator position)
 			{
-				return (this->erase(position, ++position));
+					iterator	ret;
+
+					ret = position;
+					while (position + 1 != this->end())
+					{
+						*position = *(position + 1);
+						position++;
+					}
+					this->_size--;
+					return ret;
 			}
 
 			iterator erase (iterator first, iterator last)
 			{
-				size_type n = 0;
-				for (iterator it = first; it != last; it++)
-					n++;
-				size_type i = 0;
-				while (first.getIt() != (&this->_tab[i]) && i <= this->_size)
-					i++;
-				for (size_type index = i; index < this->_size - n; index++)
-					this->_tab[index] = this->_tab[index + n];
-				this->resize(this->_size - n);
-				pointer		ret = &this->_tab[i];
-				return (iterator(ret));
+					while (first != last)
+					{
+						erase(first);
+						last--;
+					}
+					return first;
 			}
 			
 			void swap (vector& x)
 			{
-				vector<value_type> tmp = (*this);
 				
-				(*this) = x;
-				x = tmp;
+				pointer			tmp_tab = this->_tab;
+				size_type		tmp_size = this->_size ;
+				size_type		tmp_capacity = this->_capacity;
+				allocator_type	tmp_alloc = this->_alloc;
+
+				this->_tab = x._tab;
+				this->_alloc = x._alloc;
+				this->_size = x._size;
+				this->_capacity = x._capacity;
+
+				x._tab = tmp_tab;
+				x._alloc = tmp_alloc;
+				x._size = tmp_size;
+				x._capacity = tmp_capacity;
 			}
 			
 			void clear()
 			{
-				this->resize(0);
+				this->erase(this->begin(), this->end());
 			}
 	};
-
-	// template <class Alloc>
-	// class vector<bool,Alloc>
-	// {
-		
-	// };
 
 	template <class T, class Alloc>
   	bool		operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
