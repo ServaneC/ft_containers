@@ -6,13 +6,14 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/05 13:59:37 by schene            #+#    #+#             */
-/*   Updated: 2021/02/08 18:46:30 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/18 09:37:01 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_UTILS_HPP
 # define FT_UTILS_HPP
 
+# include <limits>
 namespace ft
 {	
 	/*
@@ -21,6 +22,12 @@ namespace ft
 	** it will allow us to do some static polymorphism (using SFINAE)
 	** ********************************************************************
 	*/
+	// template<bool B, class T = void>
+	// 	struct enable_if {};
+
+	// template<class T>
+	// 	struct enable_if<true, T> { typedef T type; };
+
 	template< bool condition, class T = void>
 	struct enable_if{}; //nothing defined when not true.
 
@@ -83,6 +90,8 @@ namespace ft
 		// value_type
 		static const bool value = sizeof(test<IsIterator>(NULL)) == sizeof(yes);
 	};
+
+	
 }
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 10:09:47 by schene            #+#    #+#             */
-/*   Updated: 2021/02/12 14:26:18 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/22 10:41:00 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <stdexcept>
 # include <iostream>
 
-# include "ft_utils.hpp"
-# include "Reverse_iterator.hpp"
+# include "./utils/ft_utils.hpp"
+# include "./utils/Reverse_iterator.hpp"
 
 namespace ft
 {
@@ -165,8 +165,8 @@ namespace ft
 			}
 	};
 
-	template < class T>
-	const bool vectorIterator<T>::input_iter = true;
+	// template < class T>
+	// const bool vectorIterator<T>::input_iter = true;
 
 	template <typename T, class Allocator >
 	class vector

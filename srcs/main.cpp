@@ -6,20 +6,16 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/07 12:24:39 by schene            #+#    #+#             */
-/*   Updated: 2021/02/01 18:02:47 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/18 12:19:36 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "List.hpp"
+#include "Map.hpp"
 #include <list>
 #include <iterator>
-
-// template <typename T>
-// void	print_vector(ft::vector<T> vec)
-// {
-// 	for (size_t i = 0; i < vec.size(); i++)
-// 		std::cout << i << " [" << vec[i] << ']' << std::endl;
-// }
+#include <map>
+#include <iostream>
+#include <unordered_map>
 
 template <class Container>
 void	printContainer(Container c)
@@ -42,9 +38,24 @@ void	printContainer(Container c)
 	std::cout << std::endl;
 }
 
+template<typename K, typename V>
+void print_map(std::map<K,V> const &m)
+{
+	for (typename std::map<K,V>::const_iterator it = m.begin(); it != m.end(); ++it)
+        std::cout << "{" << (*it).first << ": " << (*it).second << "} ";
+	std::cout << std::endl;
+}
+
+template<typename K, typename V>
+void print_mymap(ft::map<K,V> const &m)
+{
+	for (typename ft::map<K,V>::const_iterator it = m.begin(); it != m.end(); it++)
+        std::cout << "{" << (*it).first << ": " << (*it).second << "} ";
+	std::cout << std::endl;
+	
+}
+
 int main()
 {
-	
-	
 	return 0;
 }

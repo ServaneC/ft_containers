@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 14:32:39 by schene            #+#    #+#             */
-/*   Updated: 2021/02/15 21:35:19 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/22 10:40:15 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,9 @@
 # define LIST_HPP
 
 # include <memory>
-
-# include "Node.hpp"
-# include "Reverse_iterator.hpp"
-# include "ft_utils.hpp"
+# include "./utils/Node.hpp"
+# include "./utils/Reverse_iterator.hpp"
+# include "./utils/ft_utils.hpp"
 # include <iostream>
 
 namespace ft
@@ -633,8 +632,8 @@ namespace ft
 	{
 		if (lhs.size() != rhs.size())
 			return false;
-		listIterator<T> rhs_it = rhs.begin();
-		for (listIterator<T> lhs_it = lhs.begin(); lhs_it != lhs.end();lhs_it++)
+		typename list<T>::iterator rhs_it = rhs.begin();
+		for (typename list<T>::iterator lhs_it = lhs.begin(); lhs_it != lhs.end();lhs_it++)
 		{
 			if (lhs_it.getIt() != rhs_it.getIt())
 				return false;
@@ -652,11 +651,12 @@ namespace ft
 	template <class T, class Alloc>
 	bool operator<  (const list<T,Alloc>& lhs, const list<T,Alloc>& rhs)
 	{
-		listIterator<T> rhs_it = rhs.begin();
-		for (listIterator<T> lhs_it = lhs.begin(); lhs_it != lhs.end();lhs_it++)
+		typename list<T>::iterator rhs_it = rhs.begin();
+		for (typename list<T>::iterator lhs_it = lhs.begin(); lhs_it != lhs.end();lhs_it++)
 		{
 			if (lhs_it.getIt() < rhs_it.getIt())
 				return true;
+			rhs_it++;
 		}
 		return false;
 	}

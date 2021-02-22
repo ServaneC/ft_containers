@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 10:16:55 by schene            #+#    #+#             */
-/*   Updated: 2021/02/15 21:39:03 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/19 15:48:46 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,6 @@ int			main(void)
 	test_vector();
 	test_vector_string();
 	test_list();
+	test_map();
 	return 0;
 }
