@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 10:13:03 by schene            #+#    #+#             */
-/*   Updated: 2021/02/15 13:23:57 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/23 12:14:53 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	compareVector(std::string function, ft::vector<T> myv, std::vector<T> vecto
 	}
 }
 
-void		test_vector()
+int 		main()
 {	
 	{
 		std::cout << _CYAN << "==================== CONSTRUCTOR TEST ====================" << _END << std::endl;
@@ -87,7 +87,7 @@ void		test_vector()
 	{
 		ft::vector<int>		myvector(5, 42);
 		std::vector<int>	vector(5, 42);
-		compareVector("fill with one argument -> vector(5, 42);", myvector, vector);
+		compareVector("fill with two argument -> vector(5, 42);", myvector, vector);
 
 		ft::vector<int>		mycopy(myvector);
 		std::vector<int>	copy(vector);
@@ -203,33 +203,6 @@ void		test_vector()
 		myvector.resize(12);
 		vector.resize(12);
 		compareVector("resize(12)", myvector, vector);
-	}
-	{
-		std::cout << _CYAN << "==================== RESIZE TEST 2 ====================" << _END << std::endl;
-		
-		ft::vector<int>		myvector;
-		std::vector<int>	vector;
-		
-		std::cout << "0. myvector size: " << myvector.size() << '\n';
-		std::cout << "0. vector size: " << vector.size() << '\n'<< '\n';
-
-		for (int i=0; i<10; i++)
-		{
-			myvector.push_back(i);
-			vector.push_back(i);
-		}
-		std::cout << "1. myvector size: " << myvector.size() << '\n';
-		std::cout << "1. vector size: " << vector.size() << '\n' << '\n';
-
-		myvector.insert (myvector.end(), 10, 100);
-		vector.insert (vector.end(), 10, 100);
-		std::cout << "2. myvector size: " << myvector.size() << '\n';
-		std::cout << "2. vector size: " << vector.size() << '\n'<< '\n';
-
-		myvector.pop_back();
-		vector.pop_back();
-		std::cout << "3. myvector size: " << myvector.size() << '\n';
-		std::cout << "3. vector size: " << vector.size() << '\n'<< '\n';
 	}
 	{
 		std::cout << _CYAN << "==================== CAPACITY TEST ====================" << _END << std::endl;
@@ -420,7 +393,7 @@ void		test_vector()
 		compareVector("after assigning some value w/ at: ", myvector, vector);
 	}
 	{
-		std::cout << _CYAN << "==================== FRONT TEST ====================" << _END << std::endl;
+		std::cout << _CYAN << "==================== FRONT and BACK TEST ====================" << _END << std::endl;
 
 		ft::vector<int>		myvector;
 		std::vector<int>	vector;
@@ -435,6 +408,8 @@ void		test_vector()
 
 		std::cout << _YELLOW << "myvector.front() is " << _GREEN << myvector.front() << '\n';
 		std::cout << _YELLOW << "vector.front() is " << _GREEN << vector.front() << _END <<'\n' <<'\n';
+		std::cout << _YELLOW << "myvector.back() is " << _GREEN << myvector.back() << '\n';
+		std::cout << _YELLOW << "vector.back() is " << _GREEN << vector.back() << _END <<'\n' <<'\n';
 
 		myvector.front() -= myvector.back();
 		vector.front() -= vector.back();
@@ -443,6 +418,17 @@ void		test_vector()
 
 		std::cout << _YELLOW << "myvector.front() is now " << _GREEN << myvector.front() << '\n';
 		std::cout << _YELLOW << "vector.front() is now " << _GREEN << vector.front() << _END <<'\n';
+		std::cout << _YELLOW << "myvector.back() is " << _GREEN << myvector.back() << '\n';
+		std::cout << _YELLOW << "vector.back() is " << _GREEN << vector.back() << _END <<'\n' <<'\n';
+
+		myvector.push_back(42);
+		vector.push_back(42);
+		compareVector("vector.push_back(42)", myvector, vector);
+
+		std::cout << _YELLOW << "myvector.front() is now " << _GREEN << myvector.front() << '\n';
+		std::cout << _YELLOW << "vector.front() is now " << _GREEN << vector.front() << _END <<'\n';
+		std::cout << _YELLOW << "myvector.back() is " << _GREEN << myvector.back() << '\n';
+		std::cout << _YELLOW << "vector.back() is " << _GREEN << vector.back() << _END <<'\n' <<'\n';
 	}
 	{
 		std::cout << _CYAN << "==================== ASSIGN TEST ====================" << _END << std::endl;
@@ -612,6 +598,31 @@ void		test_vector()
 		compareVector("erase the first 3 elements", myvector, vector);
 	}
 	{
+		std::cout << _CYAN << "==================== MEMBER SWAP TEST ====================" << _END << std::endl;
+
+		// unsigned int i;
+		ft::vector<int>		my_foo (3,100);   // three ints with a value of 100
+		ft::vector<int>		my_bar (5,200);   // five ints with a value of 200
+
+		std::vector<int>	foo (3,100);   // three ints with a value of 100
+  		std::vector<int>	bar (5,200);   // five ints with a value of 200
+
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
+		
+		my_foo.swap(my_bar);
+		foo.swap(bar);
+
+		std::cout << _PURPLE << "foo.swap(bar)" << _END << std::endl;
+
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
+	}
+	{
 		std::cout << _CYAN << "==================== CLEAR TEST ====================" << _END << std::endl;
 
 		ft::vector<int> myvector;
@@ -672,6 +683,32 @@ void		test_vector()
 		if (my_foo >= my_bar) std::cout << "my_foo is greater than or equal to my_bar\n";
 		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
 		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+
+		my_foo = my_bar;
+		foo = bar;
+		std::cout << _PURPLE << "foo = bar" << _END << std::endl;
+
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
+
+		if (my_foo == my_bar) std::cout << "my_foo and my_bar are equal\n";
+		if (my_foo != my_bar) std::cout << "my_foo and my_bar are not equal\n";
+		if (foo==bar) std::cout << "foo and bar are equal\n";
+		if (foo!=bar) std::cout << "foo and bar are not equal\n";
+		std::cout << std::endl;
+		
+		if (my_foo <  my_bar) std::cout << "my_foo is less than my_bar\n";
+		if (my_foo >  my_bar) std::cout << "my_foo is greater than my_bar\n";
+		if (foo< bar) std::cout << "foo is less than bar\n";
+		if (foo> bar) std::cout << "foo is greater than bar\n";
+		std::cout << std::endl;
+
+		if (my_foo <= my_bar) std::cout << "my_foo is less than or equal to my_bar\n";
+		if (my_foo >= my_bar) std::cout << "my_foo is greater than or equal to my_bar\n";
+		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
 	}
 	{
 		std::cout << _CYAN << "==================== NON MEMBER SWAP TEST ====================" << _END << std::endl;
@@ -688,14 +725,16 @@ void		test_vector()
 		std::cout << "foo -> ", printContainer(foo);
 		std::cout << "bar -> ", printContainer(bar);
 		
-		my_foo.swap(my_bar);
-		foo.swap(bar);
+		swap(my_foo, my_bar);
+		swap(foo, bar);
 
-		std::cout << _PURPLE << "foo.swap(bar)" << _END << std::endl;
+		std::cout << _PURPLE << "swap(foo, bar)" << _END << std::endl;
 
 		std::cout << "my_foo -> ", printContainer(my_foo);
 		std::cout << "my_bar -> ", printContainer(my_bar);
 		std::cout << "foo -> ", printContainer(foo);
 		std::cout << "bar -> ", printContainer(bar);
 	}
+	test_vector_string();
+	return 0;
 }

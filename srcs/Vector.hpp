@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 10:09:47 by schene            #+#    #+#             */
-/*   Updated: 2021/02/22 10:41:00 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/23 11:56:34 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,9 +165,6 @@ namespace ft
 			}
 	};
 
-	// template < class T>
-	// const bool vectorIterator<T>::input_iter = true;
-
 	template <typename T, class Allocator >
 	class vector
 	{
@@ -185,7 +182,6 @@ namespace ft
 			typedef ReverseIterator<iterator> const		const_reverse_iterator;
 			typedef std::ptrdiff_t						difference_type;
 
-		
 		private:
 			pointer			_tab;
 			size_type		_size;

@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 10:13:22 by schene            #+#    #+#             */
-/*   Updated: 2021/02/09 15:21:24 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/23 12:20:18 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,6 @@ void	printContainer(Container &c)
 	std::cout << std::endl;
 }
 
-void		test_queue(void);
-void		test_map(void);
-void		test_stack(void);
-void		test_list(void);
-void		test_vector(void);
 void		test_vector_string(void);
 
 #endif

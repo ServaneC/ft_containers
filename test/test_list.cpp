@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 18:03:28 by schene            #+#    #+#             */
-/*   Updated: 2021/02/15 21:38:57 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/23 11:18:30 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ bool compare_nocase (const std::string& first, const std::string& second)
   return ( first.length() < second.length() );
 }
 
-void		test_list(void)
+int		main(void)
 {
 	std::cout << _CYAN << "==================== CONSTRUCTOR TEST ====================" << _END << std::endl;
 	{
@@ -709,17 +709,17 @@ void		test_list(void)
 	}
 	{
 		int myints[]= {15,36,7,17,20,39,4,1};
-		ft::list<int>	mylist(myints,myints+8);   // 15 36 7 17 20 39 4 1
-		std::list<int>	list(myints,myints+8);   // 15 36 7 17 20 39 4 1
+		ft::list<int>	mylist(myints,myints+8);
+		std::list<int>	list(myints,myints+8);
 
 		compareList("content", mylist, list);
 
-		mylist.remove_if (single_digit);           // 15 36 17 20 39
-		list.remove_if (single_digit);           // 15 36 17 20 39
+		mylist.remove_if (single_digit);
+		list.remove_if (single_digit);
 		compareList("list.remove_if (single_digit)", mylist, list);
 
-		mylist.remove_if (is_odd());               // 36 20
-		list.remove_if (is_odd());               // 36 20
+		mylist.remove_if (is_odd());
+		list.remove_if (is_odd());
 		compareList("list.remove_if (is_odd())", mylist, list);
 	}
 	{
@@ -902,6 +902,32 @@ void		test_list(void)
 		if (my_foo >= my_bar) std::cout << "my_foo is greater than or equal to my_bar\n";
 		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
 		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+
+		my_foo = my_bar;
+		foo = bar;
+
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
+
+		if (my_foo == my_bar) std::cout << "my_foo and my_bar are equal\n";
+		if (my_foo != my_bar) std::cout << "my_foo and my_bar are not equal\n";
+		if (foo==bar) std::cout << "foo and bar are equal\n";
+		if (foo!=bar) std::cout << "foo and bar are not equal\n";
+		std::cout << std::endl;
+		
+		if (my_foo <  my_bar) std::cout << "my_foo is less than my_bar\n";
+		if (my_foo >  my_bar) std::cout << "my_foo is greater than my_bar\n";
+		if (foo< bar) std::cout << "foo is less than bar\n";
+		if (foo> bar) std::cout << "foo is greater than bar\n";
+		std::cout << std::endl;
+
+		if (my_foo <= my_bar) std::cout << "my_foo is less than or equal to my_bar\n";
+		if (my_foo >= my_bar) std::cout << "my_foo is greater than or equal to my_bar\n";
+		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
+		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
+
 	}
 	{
 		std::cout << _CYAN << "==================== NON MEMBER SWAP TEST ====================" << _END << std::endl;
@@ -928,4 +954,5 @@ void		test_list(void)
 		std::cout << "foo -> ", printContainer(foo);
 		std::cout << "bar -> ", printContainer(bar);
 	}
+	return 0;
 }

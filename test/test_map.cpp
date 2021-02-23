@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/18 12:00:10 by schene            #+#    #+#             */
-/*   Updated: 2021/02/19 15:49:06 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/23 12:26:36 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	compareMap(std::string function, ft::map<K,V> &mymap, std::map<K,V> &map)
 	}
 }
 
-void test_map()
+int		main()
 {
 	{
 		std::cout << _CYAN << "==================== empty CONSTRUCTOR TEST ====================" << _END << std::endl;
@@ -240,6 +240,7 @@ void test_map()
 		std::cout << _YELLOW << "map['z'] = " << _GREEN << map['z'] << _END << std::endl;
 		std::cout << "-> since z does not match with any element in the container , the function inserts a new element with 'z' as a key" << std::endl << std::endl;
 	
+		compareMap("content", mymap, map);
 		std::cout << _YELLOW << "mymap size = " << _GREEN << mymap.size() << _END << std::endl;
 		std::cout << _YELLOW << "map size = " << _GREEN << map.size() << _END << std::endl;
 	}
@@ -353,8 +354,8 @@ void test_map()
 		ft::map<char, int>	mymap;
 		std::map<char, int>	map;
 
-		std::cout << mymap.max_size() <<std::endl;
-		std::cout << map.max_size() <<std::endl;
+		std::cout << _YELLOW << "mymap max_size = " << _END << mymap.max_size() <<std::endl;
+		std::cout << _YELLOW << "  map max_size = " << _END << map.max_size() <<std::endl;
 	}
 	{
 		std::cout << _CYAN << "==================== KEY_COMP TEST ====================" << _END << std::endl;
@@ -573,4 +574,5 @@ void test_map()
 		if (foo<=bar) std::cout << "foo is less than or equal to bar\n";
 		if (foo>=bar) std::cout << "foo is greater than or equal to bar\n";
 	}
+	return 0;
 }

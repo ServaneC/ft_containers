@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 14:51:30 by schene            #+#    #+#             */
-/*   Updated: 2021/02/11 16:24:41 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/23 12:09:01 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,13 +99,18 @@ void	test_vector_string()
 
 	std::cout << _CYAN << "==================== RESIZE ====================" << _END << std::endl;
 
+	std::cout << "Size of myBOB " << myBOB.size() << std::endl;
+	std::cout << "Size of BOB " << BOB.size() << std::endl << std::endl;
+
 	size_t	bob_resize = 2;
 	myBOB.resize(bob_resize);
 	BOB.resize(bob_resize);
 
+	
+	compareVector("BOB.resize(2)", myBOB, BOB);
 	std::cout << "Size of myBOB " << myBOB.size() << std::endl;
 	std::cout << "Size of BOB " << BOB.size() << std::endl << std::endl;
-	compareVector("BOB.resize(2)", myBOB, BOB);
+
 	std::cout << "myBOB is empty now ? " << myBOB.empty() << '\n';
 	std::cout << "BOB is empty now ? " << BOB.empty() << '\n' << '\n';
 
@@ -113,7 +118,7 @@ void	test_vector_string()
 	std::cout << "Size of JOHN " << JOHN.size() << std::endl;
 	
 
-	size_t	mike_resize = 6;
+	size_t	mike_resize = 9;
 
 	myMIKE.resize(mike_resize, "World");
 	MIKE.resize(mike_resize, "World");
@@ -220,7 +225,7 @@ void	test_vector_string()
 	ft::vector<std::string>		my_assign_range(8, "blablabla");
 	std::vector<std::string>	assign_range(8, "blablabla");
 	
-	compareVector("assign_range", my_assign_range, assign_range);
+	compareVector("assign_range(8, blablabla)", my_assign_range, assign_range);
 
 	my_assign_range.assign(myBOB.begin() + 1, myBOB.begin() + 10);
 	assign_range.assign(BOB.begin() + 1, BOB.begin() + 10);
