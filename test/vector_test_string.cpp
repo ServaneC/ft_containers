@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 14:51:30 by schene            #+#    #+#             */
-/*   Updated: 2021/02/23 12:09:01 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/25 08:56:32 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,6 @@ void	test_vector_string()
 
 	std::cout << "myBOB is empty now ? " << myBOB.empty() << '\n';
 	std::cout << "BOB is empty now ? " << BOB.empty() << '\n' << '\n';
-
-	std::cout << "Size of myJOHN " << myJOHN.size() << std::endl;
-	std::cout << "Size of JOHN " << JOHN.size() << std::endl;
-	
 
 	size_t	mike_resize = 9;
 
@@ -225,7 +221,7 @@ void	test_vector_string()
 	ft::vector<std::string>		my_assign_range(8, "blablabla");
 	std::vector<std::string>	assign_range(8, "blablabla");
 	
-	compareVector("assign_range(8, blablabla)", my_assign_range, assign_range);
+	compareVector("(constructor) assign_range(8, blablabla)", my_assign_range, assign_range);
 
 	my_assign_range.assign(myBOB.begin() + 1, myBOB.begin() + 10);
 	assign_range.assign(BOB.begin() + 1, BOB.begin() + 10);
@@ -242,13 +238,17 @@ void	test_vector_string()
 	std::cout << _CYAN << "==================== PUSH / POP_BACK ====================" << _END << std::endl;
 
 	myBOB.push_back("I mean..");
+	std::cout << "myBOB.push_back(I mean..)" << std::endl;
 	std::cout << "last elem of myBOB : " << _YELLOW << myBOB.back() << _END  << '\n';
 	myBOB.pop_back();
+	std::cout << "myBOB.pop_back()" << std::endl;
 	std::cout << "last elem of myBOB : " << _YELLOW << myBOB.back() << _END << '\n' << '\n';
 
 	BOB.push_back("I mean..");
+	std::cout << "BOB.push_back(I mean..)" << std::endl;
 	std::cout << "last elem of BOB : " << _YELLOW << BOB.back() << _END << '\n';
 	BOB.pop_back();
+	std::cout << "BOB.pop_back()" << std::endl;
 	std::cout << "last elem of BOB : " << _YELLOW << BOB.back() << _END << '\n';
 
 	std::cout << _CYAN << "==================== INSERT ====================" << _END << std::endl;
@@ -261,7 +261,7 @@ void	test_vector_string()
 		my_insert_in_me.push_back("HELLO");
 		insert_in_me.push_back("HELLO");
 	}
-	compareVector("insert_in_me", my_insert_in_me, insert_in_me);
+	compareVector("content of insert_in_me", my_insert_in_me, insert_in_me);
 
 	ft::vector<std::string>::iterator	mytmp;
 	std::vector<std::string>::iterator	tmp;
@@ -270,16 +270,6 @@ void	test_vector_string()
 	my_insert_in_me.insert(mytmp, 8, "Norminet");
 	insert_in_me.insert(tmp, 8, "Norminet");
 	compareVector("insert_in_me.insert(tmp, 8, Norminet);", my_insert_in_me, insert_in_me);
-
-	ft::vector<std::string>::const_iterator my_const_it(my_insert_in_me.begin());
-	std::cout << "my_const it : " << std::endl;
-	std::cout << *my_const_it << '\n' << '\n';
-	// *my_const_it = 89; // Does not compile because it's a const_iterator
-
-	std::vector<std::string>::const_iterator const_it(insert_in_me.begin());
-	std::cout << "Const it : " << std::endl;
-	std::cout << *const_it << '\n';
-	// *const_it = 89; // Does not compile because it's a const_iterator
 
 	std::cout << _CYAN << "==================== INSERT RANGE ====================" << _END << std::endl;
 	

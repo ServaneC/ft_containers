@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 10:13:03 by schene            #+#    #+#             */
-/*   Updated: 2021/02/23 12:14:53 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/25 08:46:52 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,21 +160,8 @@ int 		main()
 		}
 		compareVector("content", myvector, vector);
 
-		std::cout << _YELLOW << "myvector size: " << myvector.size() << "\n";
-		if (myvector.capacity() >= myvector.size())
-			std::cout << "capacity is fine\n";
-		if (myvector.max_size() > 10000)
-			std::cout << "max_size is sufficient\n";
-		
-		std::cout << "\n" << "vector size: " << vector.size() << "\n";
-		if (vector.capacity() >= vector.size())
-			std::cout << "capacity is fine\n";
-		if (vector.max_size() > 10000)
-			std::cout << "max_size is sufficient\n" << _END;
-
-		std::cout << "\n" << "myvector max_size: " << myvector.max_size() << "\n";
-		std::cout << "vector max_size: " << vector.max_size() << "\n";
-
+		std::cout << "myvector max_size: " << myvector.max_size() << "\n";
+		std::cout << "vector max_size:   " << vector.max_size() << "\n";
 		
 	}
 	{
@@ -216,56 +203,40 @@ int 		main()
 			myvector.push_back(i);
 			vector.push_back(i);
 		}
+		compareVector("content", myvector, vector);
 
-		std::cout << _YELLOW << "myvector size: " << _GREEN << (int) myvector.size() << _YELLOW << '\n';
+		std::cout << "myvector size: " << _GREEN << (int) myvector.size() << _YELLOW << std::endl;
+		std::cout << "myvector capacity : " << _GREEN << (int) myvector.capacity() << _YELLOW << std::endl;
 
-		if (myvector.capacity() >= myvector.size())
-			std::cout << "capacity is fine\n";
-		else
-			std::cout << _RED << "capcity is not fine : " << myvector.capacity() << '\n';
-		if (myvector.max_size() > 10000)
-			std::cout << "max_size is fine\n";
-
-		std::cout << '\n' << "vector size: " << _GREEN  << (int) vector.size() << _YELLOW << '\n';
-		if (vector.capacity() >= vector.size())
-			std::cout << "capacity is fine\n";
-		else
-			std::cout <<_RED <<  "capcity is not fine : " << vector.capacity() << '\n';
-		if (vector.max_size() > 10000)
-			std::cout << "max_size is fine\n";
-		std::cout << _END;
+		std::cout << '\n' << "vector size: " << _GREEN  << (int) vector.size() << _YELLOW << std::endl;
+		std::cout << "vector capacity : " << _GREEN  << (int) vector.capacity() << _YELLOW << std::endl;
 	}
 	{
 		std::cout << _CYAN << "==================== EMPTY TEST ====================" << _END << std::endl;
 
 		ft::vector<int>		myvector;
 		std::vector<int>	vector;
-		int sum (0);
 
 		for (int i = 1; i <= 10; i++)
 		{
 			myvector.push_back(i);
 			vector.push_back(i);
 		}
+		compareVector("content", myvector, vector);
+
+		std::cout << _YELLOW << "is myvector empty ? "<< std::boolalpha << _GREEN << myvector.empty() << _END << std::endl;
+		std::cout << _YELLOW << "is vector empty ? "<< std::boolalpha << _GREEN << vector.empty() << _END << std::endl;
 
 		while (!myvector.empty())
-		{
-			sum += myvector.back();
 			myvector.pop_back();
-		}
-		std::cout << "myvector total: " << sum << '\n';
 
-
-		sum = 0;
 		while (!vector.empty())
-		{
-			sum += vector.back();
 			vector.pop_back();
-		}
 
-		std::cout << "vector total: " << sum << '\n';
+		compareVector("after a loop of pop_back, vector is empty ", myvector, vector);
 
-		compareVector("empty ", myvector, vector);
+		std::cout << _YELLOW << "is myvector empty ? "<< std::boolalpha << _GREEN << myvector.empty() << _END << std::endl;
+		std::cout << _YELLOW << "is vector empty ? "<< std::boolalpha << _GREEN << vector.empty() << _END << std::endl;
 	}
 	{
 		std::cout << _CYAN << "==================== RESERVE TEST ====================" << _END << std::endl;
@@ -384,6 +355,8 @@ int 		main()
 		ft::vector<int> myvector (10);   // 10 zero-initialized ints
 		std::vector<int> vector (10);   // 10 zero-initialized ints
 
+		compareVector("content after vector (10) ", myvector, vector);
+
 		// assign some values:
 		for (unsigned i=0; i < myvector.size(); i++)
 		{
@@ -461,7 +434,7 @@ int 		main()
 		compareVector("third.assign (myints, myints+3)", third, stl_third);
 	}
 	{
-		std::cout << _CYAN << "==================== PUSH_BACK and BACK TEST ====================" << _END << std::endl;
+		std::cout << _CYAN << "==================== PUSH_BACK TEST ====================" << _END << std::endl;
 
 		ft::vector<int> myvector;
 		std::vector<int> vector;
@@ -542,8 +515,8 @@ int 		main()
 		ft::vector<int>::iterator my_it;
 		std::vector<int>::iterator it;
 
-		my_it = myvector.begin();
-		it = vector.begin();
+		my_it = ++myvector.begin();
+		it = ++vector.begin();
 		my_it = myvector.insert (my_it , 200);
 		it = vector.insert (it , 200);
 

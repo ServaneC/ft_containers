@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/22 11:49:51 by schene            #+#    #+#             */
-/*   Updated: 2021/02/23 11:18:07 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/25 09:22:13 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int		main()
 			stack.push  (i * 3 - 7);
 		}
 		
-		std::cout << std::endl << _CYAN << "pushing 10 int..." << _END << std::endl << std::endl;
+		std::cout << std::endl << _CYAN << "pushing 15 int..." << _END << std::endl << std::endl;
 
 		std::cout << _YELLOW << "mystack size =  " << _GREEN << mystack.size() << std::endl;
 		std::cout << _YELLOW << "stack size =  " << _GREEN <<  stack.size() << std::endl;
@@ -108,7 +108,7 @@ int		main()
 			stack.pop();
 		}
 
-		std::cout << std::endl << _CYAN << "poping 15 int..." << _END << std::endl << std::endl;
+		std::cout << std::endl << _CYAN << "poping 10 int..." << _END << std::endl << std::endl;
 
 		std::cout << _YELLOW << "mystack size =  " << _GREEN << mystack.size() << std::endl;
 		std::cout << _YELLOW << "stack size =  " << _GREEN <<  stack.size() << std::endl;

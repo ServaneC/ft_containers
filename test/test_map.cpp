@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/18 12:00:10 by schene            #+#    #+#             */
-/*   Updated: 2021/02/23 12:26:36 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/25 09:18:38 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,13 +146,10 @@ int		main()
 
 		compareMap("content", mymap, map);
 
-		// mymap.erase(mymap.find('b'));
-		// map.erase(map.find('b'));
-
 		mymap.erase(--mymap.end());
 		map.erase(--map.end());
 
-		compareMap("from an iterator -> map.erase(map.find('b')", mymap, map);
+		compareMap("from an iterator -> map.erase(--mymap.end())", mymap, map);
 
 		// from key
 		mymap.erase('c');

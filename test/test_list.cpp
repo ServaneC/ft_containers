@@ -6,7 +6,7 @@
 /*   By: schene <schene@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 18:03:28 by schene            #+#    #+#             */
-/*   Updated: 2021/02/23 11:18:30 by schene           ###   ########.fr       */
+/*   Updated: 2021/02/25 09:14:26 by schene           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,66 +229,32 @@ int		main(void)
 		compareList("resize(12)", mylist, list);
 	}
 	{
-		std::cout << _CYAN << "==================== RESIZE TEST 2 ====================" << _END << std::endl;
-		
-		ft::list<int>		mylist;
-		std::list<int>	list;
-		
-		std::cout << "0. mylist size: " << mylist.size() << '\n';
-		std::cout << "0. list size: " << list.size() << '\n'<< '\n';
-
-		for (int i=0; i<10; i++)
-		{
-			mylist.push_back(i);
-			list.push_back(i);
-		}
-		std::cout << "1. mylist size: " << mylist.size() << '\n';
-		std::cout << "1. list size: " << list.size() << '\n' << '\n';
-
-		mylist.insert (mylist.end(), 10, 100);
-		list.insert (list.end(), 10, 100);
-		std::cout << "2. mylist size: " << mylist.size() << '\n';
-		std::cout << "2. list size: " << list.size() << '\n'<< '\n';
-
-		mylist.pop_back();
-		list.pop_back();
-		std::cout << "3. mylist size: " << mylist.size() << '\n';
-		std::cout << "3. list size: " << list.size() << '\n'<< '\n';
-	}
-	{
 		std::cout << _CYAN << "==================== EMPTY TEST ====================" << _END << std::endl;
 
 		ft::list<int>	mylist;
 		std::list<int>	list;
-		int sum (0);
 
 		for (int i = 1; i <= 10; i++)
 		{
 			mylist.push_back(i);
 			list.push_back(i);
 		}
+		compareList("content ", mylist, list);
+		std::cout << _YELLOW << "is mylist empty ? "<< std::boolalpha << _GREEN << mylist.empty() << _END << std::endl;
+		std::cout << _YELLOW << "is list empty ? "<< std::boolalpha << _GREEN << list.empty() << _END << std::endl << std::endl;
 
 		while (!mylist.empty())
-		{
-			sum += mylist.back();
 			mylist.pop_back();
-		}
-		std::cout << "mylist total: " << sum << '\n';
 
-
-		sum = 0;
 		while (!list.empty())
-		{
-			sum += list.back();
 			list.pop_back();
-		}
 
-		std::cout << "list total: " << sum << '\n';
-
-		compareList("empty ", mylist, list);
+		compareList("empty after a loop of pop_back", mylist, list);
+		std::cout << _YELLOW << "is mylist empty ? "<< std::boolalpha << _GREEN << mylist.empty() << _END << std::endl;
+		std::cout << _YELLOW << "is list empty ? "<< std::boolalpha << _GREEN << list.empty() << _END << std::endl;
 	}
-		{
-		std::cout << _CYAN << "==================== FRONT TEST ====================" << _END << std::endl;
+	{
+		std::cout << _CYAN << "==================== FRONT and BACK TEST ====================" << _END << std::endl;
 
 		ft::list<int>		mylist;
 		std::list<int>	list;
@@ -303,6 +269,8 @@ int		main(void)
 
 		std::cout << _YELLOW << "mylist.front() is " << _GREEN << mylist.front() << '\n';
 		std::cout << _YELLOW << "list.front() is " << _GREEN << list.front() << _END <<'\n' <<'\n';
+		std::cout << _YELLOW << "mylist.back() is " << _GREEN << mylist.back() << '\n';
+		std::cout << _YELLOW << "list.back() is " << _GREEN << list.back() << _END <<'\n' <<'\n';
 
 		mylist.front() -= mylist.back();
 		list.front() -= list.back();
@@ -311,6 +279,17 @@ int		main(void)
 
 		std::cout << _YELLOW << "mylist.front() is now " << _GREEN << mylist.front() << '\n';
 		std::cout << _YELLOW << "list.front() is now " << _GREEN << list.front() << _END <<'\n';
+		std::cout << _YELLOW << "mylist.back() is " << _GREEN << mylist.back() << '\n';
+		std::cout << _YELLOW << "list.back() is " << _GREEN << list.back() << _END <<'\n' <<'\n';
+
+		mylist.push_back(42);
+		list.push_back(42);
+		compareList("list.push_back(42)", mylist, list);
+
+		std::cout << _YELLOW << "mylist.front() is now " << _GREEN << mylist.front() << '\n';
+		std::cout << _YELLOW << "list.front() is now " << _GREEN << list.front() << _END <<'\n';
+		std::cout << _YELLOW << "mylist.back() is " << _GREEN << mylist.back() << '\n';
+		std::cout << _YELLOW << "list.back() is " << _GREEN << list.back() << _END <<'\n' <<'\n';
 	}
 	{
 		std::cout << _CYAN << "==================== ASSIGN TEST ====================" << _END << std::endl;
@@ -343,7 +322,7 @@ int		main(void)
 		compareList("third.assign (myints, myints+3)", third, stl_third);
 	}
 	{
-		std::cout << _CYAN << "==================== PUSH_BACK and BACK TEST ====================" << _END << std::endl;
+		std::cout << _CYAN << "==================== PUSH_BACK TEST ====================" << _END << std::endl;
 
 		ft::list<int> mylist;
 		std::list<int> list;
@@ -357,11 +336,9 @@ int		main(void)
 			list.push_back ( list.back() -1 );
 		}
 		compareList("after a loop of list.push_back", mylist, list);
-		std::cout << "mylist.back() -> " << _GREEN << mylist.back() << _END << std::endl;
-		std::cout << "list.back() -> " << _GREEN << list.back() << _END << std::endl;
 	}
 	{
-		std::cout << _CYAN << "==================== PUSH_FRONT and FRONT TEST ====================" << _END << std::endl;
+		std::cout << _CYAN << "==================== PUSH_FRONT TEST ====================" << _END << std::endl;
 
 		ft::list<int> mylist;
 		std::list<int> list;
@@ -375,8 +352,6 @@ int		main(void)
 			list.push_front ( list.front() -1 );
 		}
 		compareList("after a loop of list.push_front", mylist, list);
-		std::cout << "mylist.front() -> " << _GREEN << mylist.front() << _END << std::endl;
-		std::cout << "list.front() -> " << _GREEN << list.front() << _END << std::endl;
 	}
 	{
 		std::cout << _CYAN << "==================== PUSH_BACK and PUSH_FRONT TEST ====================" << _END << std::endl;
@@ -443,8 +418,8 @@ int		main(void)
 		
 		compareList("content", mylist, list);
 
-		ft::list<int>::iterator my_it = mylist.begin();
-		std::list<int>::iterator it = list.begin();
+		ft::list<int>::iterator my_it = ++mylist.begin();
+		std::list<int>::iterator it = ++list.begin();
 
 		my_it = mylist.insert (my_it , 200);
 		it = list.insert (it , 200);
@@ -516,6 +491,31 @@ int		main(void)
 		list.erase(list.begin(), it);
 
 		compareList("erase the first 3 elements", mylist, list);
+	}
+	{
+		std::cout << _CYAN << "==================== MEMBER SWAP TEST ====================" << _END << std::endl;
+
+		// unsigned int i;
+		ft::list<int>		my_foo (3,100);   // three ints with a value of 100
+		ft::list<int>		my_bar (5,200);   // five ints with a value of 200
+
+		std::list<int>	foo (3,100);   // three ints with a value of 100
+  		std::list<int>	bar (5,200);   // five ints with a value of 200
+
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
+		
+		my_foo.swap(my_bar);
+		foo.swap(bar);
+
+		std::cout << _PURPLE << "foo.swap(bar)" << _END << std::endl;
+
+		std::cout << "my_foo -> ", printContainer(my_foo);
+		std::cout << "my_bar -> ", printContainer(my_bar);
+		std::cout << "foo -> ", printContainer(foo);
+		std::cout << "bar -> ", printContainer(bar);
 	}
 	{
 		std::cout << _CYAN << "==================== CLEAR TEST ====================" << _END << std::endl;
@@ -933,19 +933,19 @@ int		main(void)
 		std::cout << _CYAN << "==================== NON MEMBER SWAP TEST ====================" << _END << std::endl;
 
 		// unsigned int i;
-		ft::list<int>		my_foo (3,100);   // three ints with a value of 100
-		ft::list<int>		my_bar (5,200);   // five ints with a value of 200
+		ft::list<int>		my_foo (3,100);
+		ft::list<int>		my_bar (5,200);
 
-		std::list<int>	foo (3,100);   // three ints with a value of 100
-  		std::list<int>	bar (5,200);   // five ints with a value of 200
+		std::list<int>	foo (3,100);
+  		std::list<int>	bar (5,200);
 
 		std::cout << "my_foo -> ", printContainer(my_foo);
 		std::cout << "my_bar -> ", printContainer(my_bar);
 		std::cout << "foo -> ", printContainer(foo);
 		std::cout << "bar -> ", printContainer(bar);
 		
-		my_foo.swap(my_bar);
-		foo.swap(bar);
+		swap(my_foo, my_bar);
+		swap(foo, bar);
 
 		std::cout << _PURPLE << "foo.swap(bar)" << _END << std::endl;
 
